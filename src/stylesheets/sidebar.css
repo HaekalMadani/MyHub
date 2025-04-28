@@ -9,17 +9,17 @@ a{
 
 
 .sidebar{
-    color: white;
+    color: var(--color-secondary);
     background-color: var(--color-primary);
-    padding: 20px;
     grid-row: 1 / 8;
+    padding: 10px;
     display: grid;
     grid-template-rows: 1fr 3fr 3fr 2fr;
     font-size: 1.1rem;
     position: fixed;
     height: 100vh;
     width: min-content;
-    padding-right: 3%;
+    padding-right: 4.5%;
     filter: brightness(1.2);
 
     overflow-y: auto;

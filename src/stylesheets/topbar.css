@@ -13,8 +13,34 @@
     background: var(--color-tertiary);
     width: max-content ;
     height: min-content;
-    padding: 10px;
+    padding: 7px;
+    color: var(--color-primary);
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: inherit;
+    display: flex;
     
     border: none;
+    border-radius: 10px;
     cursor: pointer;
+    overflow: hidden;
+    transition: all 1s ease-out;
+}
+
+.topbar svg{
+    fill: var(--color-primary);
+}
+
+.topbar span{
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    opacity: 0;
+    transition: all 1s ease-out;
+}
+
+.topbar button:hover span{
+    width: auto;
+    margin-left: 8px;
+    opacity: 1;
 }
