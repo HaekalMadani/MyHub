@@ -25,6 +25,7 @@
     flex-direction: row;
     gap: 10px;
     padding: 5px;
+    padding-left: 10px;
 
 
     align-items: center;
@@ -33,6 +34,7 @@
 .dashtab{
     width: 8%;
     height: 80%;
+    
 
     background: var(--color-primary);
     border: var(--color-accent) 2px solid;
@@ -55,7 +57,7 @@
 
 }
 
-#projectTab , #todoTab {
+.dashtab-container [id] {
 
 
     border-radius: 6px;
@@ -76,18 +78,18 @@
 .content{
     color: var(--color-secondary);
     padding: 10px;
+    padding-left: 30px;
 }
 
 .card-container{
     display: flex;
 }
 
-.add-card{
+.add-card {
     background-color: var(--color-primary);
     filter: contrast(0.8);
-    height: 25%;
-    width: 8%;
-    padding: 40px 25px;
+    width: 6vw; 
+    aspect-ratio: 1 / 1;
     border-radius: 50%;
     box-shadow: 0 5px 4px rgba(0, 0, 0, 0.5);
 
@@ -95,4 +97,6 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+
+    padding: 0;
 }

@@ -32,7 +32,7 @@ html, body{
 
 .container{
     display: grid;
-    grid-template-columns: 1fr 6fr;
+    grid-template-columns: 0.7fr 6fr;
     grid-template-rows: 0.5fr 0.2fr repeat(5, 1fr);
     
     font-weight: bold;

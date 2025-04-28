@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar"
 import Topbar from "./Topbar"
 import Project from "./Project"
 import Todo from "./Todo"
+import Spending from "./Spending"
 
 export default function Dashboard(){
     const [activeDashTab, setActiveDashTab] = useState('projectTab');
@@ -28,10 +29,18 @@ export default function Dashboard(){
                      onClick={() => setActiveDashTab('todoTab')}>
                         <p>To-Do</p>
                     </div>
+                    <div
+                    className={`dashtab ${activeDashTab === 'spendingTab' ? 'active' : ''}`}
+                    id="spendingTab"
+                    onClick={() => setActiveDashTab('spendingTab')}
+                    >
+                        <p>Spending</p>
+                    </div>
                 </div>
                 <div className="content">
                         {activeDashTab === "projectTab" && <Project />}
                         {activeDashTab === "todoTab" && <Todo />}
+                        {activeDashTab === "spendingTab" && <Spending />}
                 </div>
 
             </div>

@@ -16,9 +16,10 @@ a{
     display: grid;
     grid-template-rows: 1fr 3fr 3fr 2fr;
     font-size: 1.1rem;
-    position: fixed;
+    position: sticky;
+    top: 0;
     height: 100vh;
-    width: min-content;
+    width: 100%;
     padding-right: 4.5%;
     filter: brightness(1.2);
 
@@ -26,7 +27,7 @@ a{
 }
 
 #myhub{
-    text-align: center;
+
     font-size: 2rem;
     margin: 0;
 }
