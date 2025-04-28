@@ -1,0 +1,16 @@
+@import './index.css';
+
+.subheader{
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.project-container{
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.subheader p{
+    color: var(--color-secondary);
+    
+}

@@ -1,0 +1,20 @@
+@import './index.css';
+
+.topbar{
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.topbar button{
+    background: var(--color-tertiary);
+    width: max-content ;
+    height: min-content;
+    padding: 10px;
+    
+    border: none;
+    cursor: pointer;
+}
