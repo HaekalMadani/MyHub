@@ -7,7 +7,11 @@ app.use(cors());
 app.use(express.json());
 
 async function scanEmails(accessToken) {
-  const auth = new google.auth.OAuth2();
+  const auth = new google.auth.OAuth2(
+    '920552388273-3mpplef4rn62argnl485o7bostdvhrgm.apps.googleusercontent.com',
+    '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',
+    'http://localhost:5173'
+  );
   auth.setCredentials({ access_token: accessToken });
 
   const gmail = google.gmail({ version: 'v1', auth });
