@@ -12,6 +12,7 @@ async function scanEmails(accessToken) {
     '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',
     'http://localhost:5173'
   );
+  
   auth.setCredentials({ access_token: accessToken });
 
   const gmail = google.gmail({ version: 'v1', auth });
