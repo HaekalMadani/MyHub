@@ -1,46 +1,98 @@
 @import './index.css';
 
-.topbar{
-    grid-column: 2;
-    grid-row: 1;
+.topbar {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  justify-content: end;
+  align-items: center;
+  padding-right: 20px;
+}
+
+.user-topbar p {
+  margin: 0;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.user-topbar {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    padding-right: 20px;
-}
-
-.topbar button{
-    background: var(--color-tertiary);
-    width: max-content ;
-    height: min-content;
-    padding: 7px;
+    gap: 10px;
+    background-color: var(--color-tertiary);
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .username {
+    margin: 0;
+    font-weight: 500;
     color: var(--color-primary);
-    font-size: 1rem;
-    font-weight: bold;
-    font-family: inherit;
-    display: flex;
-    
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    overflow: hidden;
-    transition: all 1s ease-out;
 }
 
-.topbar svg{
-    fill: var(--color-primary);
+.topbar button {
+  background: var(--color-tertiary);
+  width: max-content;
+  height: min-content;
+  padding: 7px 10px;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.topbar span{
-    white-space: nowrap;
-    overflow: hidden;
-    width: 0;
-    opacity: 0;
-    transition: all 1s ease-out;
+.topbar button:hover {
+  background-color: var(--color-tertiary);
 }
 
-.topbar button:hover span{
-    width: auto;
-    margin-left: 8px;
-    opacity: 1;
+.topbar button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+}
+
+.topbar svg {
+  fill: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.topbar span {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
+  transition: max-width 0.5s ease-out, opacity 0.5s ease-out, margin-left 0.5s;
+}
+
+.topbar button:hover span {
+  max-width: 200px;
+  opacity: 1;
+  margin-left: 8px;
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    justify-content: space-between;
+    padding: 10px;
+  }
+
+  .topbar span {
+    display: none;
+  }
 }

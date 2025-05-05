@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom";
 
-export default function Home({ onTabChange }) {
+export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="home-container">
       <div className="bg-container">
@@ -26,8 +29,8 @@ export default function Home({ onTabChange }) {
       </div>
 
       <div className="home-buttons">
-        <button onClick={() => onTabChange('tab1')}>Dashboard</button>
-        <button>Schedule</button>
+        <button onClick={() => navigate('/dashboard')}>Dashboard</button>
+        <button onClick={() => navigate('/login')}>Login</button>
         <button>test</button>
       </div>
     </div>

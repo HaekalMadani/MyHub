@@ -1,0 +1,91 @@
+@import './index.css';
+  
+.form-container {
+    z-index: 100;
+    background-color: hsl(180, 50%, 15%);
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 20%;
+}
+  
+
+form h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--color-secondary);
+}
+  
+.login-username,
+.login-password,
+.signup-username,
+.signup-password,
+.signup-email {
+    margin-bottom: 20px;
+}
+  
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-secondary);
+}
+  
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border 0.3s ease;
+}
+  
+input:focus {
+    border-color: var(--color-tertiary);
+    outline: none;
+}
+  
+.submit-login {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-tertiary);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+    margin-top: 10px;
+}
+  
+.submit-login:hover {
+    filter: brightness(0.7);
+}
+  
+form p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-secondary);
+}
+  
+form button:not(.submit-login) {
+    width: 100%;
+    padding: 10px;
+    background-color: transparent;
+    border: 2px solid var(--color-tertiary);
+    color: var(--color-tertiary);
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+  
+form button:not(.submit-login):hover {
+    background-color: var(--color-tertiary);
+    color: var(--color-primary);
+}

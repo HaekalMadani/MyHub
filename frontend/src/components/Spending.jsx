@@ -15,7 +15,7 @@ const Spending = () => {
       try{
       const accessToken = tokenResponse.access_token;
       setLoading(true);
-      const res = await axios.post('http://localhost:4000/scan-emails', { token: accessToken });
+      const res = await axios.post('http://localhost:4000/api/scan-emails', { token: accessToken });
       setSpending(res.data);
       setLoggedIn(true);
       }
