@@ -1,5 +1,10 @@
 import UserModel from "../models/userModel.js";
-import { registerUser, loginUser, getUserFromToken, logoutUser } from "../services/authService.js";
+import { registerUser, loginUser, getUserFromToken, logoutUser, saveGoogleRefreshToken, deleteGoogleRefreshToken } from "../services/authService.js";
+import { authenticateToken } from '../middleware/authMiddleware.js';
+import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken';
+dotenv.config()
+
 
 export const register = async(req, res )=>{
     const {username, email, password, confirmPassword} =req.body;
@@ -48,26 +53,6 @@ export const login=async(req, res) => {
     }
 }
 
-/*
-export const getUserDetails= async(req, res)=>{
-    const token = req.headers.authorization?.split(' ')[1];
-    if(!token){
-        return res.status(401).json({success: false, message: "Token Not Provided"})
-    }
-
-    try {
-        const response=await getUserFromToken(token);
-        if(response.success===true){    
-            return res.status(200).json(response)
-        }else{
-            return res.status(400).json(response)
-        }
-    } catch (error) {
-        return { success: false, message: "Failed To Receive Data" };
-    }
-}
-*/
-
 export const logout=(req, res)=>{
     try {
         const response= logoutUser(res);
@@ -85,3 +70,62 @@ export const getMe = (req, res) => {
         return res.status(401).json({ success: false, message: "User not found" });
     }
 }
+
+// ------ GOOGLE AUTHENTICATION ------
+
+import { google } from 'googleapis';
+
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
+
+export const redirectToGoogle = (req, res) => {
+  const url = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    prompt: 'consent',
+    scope: ['https://www.googleapis.com/auth/gmail.readonly'],
+  });
+
+  res.redirect(url);
+};
+
+export const handleGoogleCallback = async(req, res) => {
+    const {code} = req.query;
+    const token = req.cookies.authToken
+    
+    if(!token){
+        return res.status(401).json({success: false, message: "User Not Authenticated"})
+    }
+
+    const userResult = await getUserFromToken(token);
+    if(!userResult.success){
+        return res.status(401).json({success: false, message: "Invalid user Token for Google Authentication"})
+    }
+
+    const userId = userResult.data.id;
+    
+    try{
+        const {tokens} = await oauth2Client.getToken(code);
+        if(tokens.refresh_token){
+            await saveGoogleRefreshToken(userId, tokens.refresh_token);
+        }
+        res.redirect("http://localhost:5173/dashboard");
+    }catch(error){
+        console.error("Error during Google authentication callback:", error);
+        return res.status(500).json({success: false, message: "Internal server error during Google authentication"});
+    }
+
+};
+
+export const unlinkGoogleAccount = async(req, res) => {
+    try{
+        const response = await deleteGoogleRefreshToken(req.user);
+        return res.status(200).json({success: true, message: "Google account unlinked successfully"});
+    }catch(error){
+        console.error("Error unlinking Google account:", error);
+        return res.status(500).json({success: false, message: "Internal server error during unlinking Google account"});
+    }
+}
+  

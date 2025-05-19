@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Topbar({userData}) {
+export default function Topbar() {
     const navigate = useNavigate();
 
     const hanldleLogout = async () => {
@@ -17,14 +17,7 @@ export default function Topbar({userData}) {
 
   return (
     <div className="topbar">
-      <div className="user-topbar">
-        <img
-        src="https://avatar.iran.liara.run/public"
-        alt="User avatar"
-        className="user-avatar"
-        />
-            <p className="username"><strong>{userData.name}</strong></p>
-        </div>
+    
 
       
       <button aria-label="Logout" onClick={hanldleLogout}>

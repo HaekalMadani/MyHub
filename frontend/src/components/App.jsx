@@ -16,7 +16,7 @@ function App() {
   axios.defaults.withCredentials = true;
 
   return (
-    <GoogleOAuthProvider clientId="920552388273-3mpplef4rn62argnl485o7bostdvhrgm.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId= {import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <Router>
         <ToastContainer position="top-center" autoClose={1000} closeOnClick theme="colored" />
         <Routes>

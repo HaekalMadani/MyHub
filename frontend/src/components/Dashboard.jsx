@@ -68,10 +68,10 @@ export default function Dashboard(){
 
     return(
         <div className="container">
-            <Sidebar />
+            <Sidebar userData={userData} />
             <Topbar userData={userData}/>
             <div className="subheader">
-                <p>{userData.name}'s Dashboard</p>
+                <p>MyDashboard</p>
             </div>
             <div className="dashboard-container">
                 <div className="dashtab-container">

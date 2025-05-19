@@ -1,4 +1,5 @@
 import { getUserFromToken } from '../services/authService.js';
+import jwt from 'jsonwebtoken';
 
 export const authMiddleware = async (req, res, next) => {
     const token = req.cookies.authToken;
@@ -9,7 +10,7 @@ export const authMiddleware = async (req, res, next) => {
 
     try {
         const result = await getUserFromToken(token);
-
+ 
         if(result.success) {
             req.user = result.data;
             next();
@@ -24,5 +25,24 @@ export const authMiddleware = async (req, res, next) => {
 
         res.clearCookie('authToken');
         return res.status(500).json({ success: false, message: "Internal server error during authentication" });
+    }
+}
+
+
+const JWT_SECRET = "ETRHSDFW43EQT7HDFA";
+
+export const authenticateToken = (req, res, next) => {
+    const token = req.cookies.authToken;
+
+    if (!token) {
+        return res.status(401).json({ success: false, message: "No token provided" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded; 
+        next();
+    } catch (err) {
+        return res.status(403).json({ success: false, message: "Invalid or expired token" });
     }
 }

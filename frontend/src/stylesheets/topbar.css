@@ -9,6 +9,10 @@
   justify-content: end;
   align-items: center;
   padding-right: 20px;
+
+
+  z-index: 100;
+ 
 }
 
 .user-topbar p {
@@ -17,21 +21,7 @@
   color: var(--color-primary);
 }
 
-.user-topbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: var(--color-tertiary);
-    padding: 5px 10px;
-    border-radius: 8px;
-  }
-  
-  .user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
+
   
   .username {
     margin: 0;
@@ -43,7 +33,7 @@
   background: var(--color-tertiary);
   width: max-content;
   height: min-content;
-  padding: 7px 10px;
+  padding: 10px 10px;
   color: var(--color-primary);
   font-size: 1rem;
   font-weight: bold;

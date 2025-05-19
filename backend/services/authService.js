@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
 import { pool } from '../config/database.js';
 import jwt from 'jsonwebtoken'
-
+import { encrypt } from '../utils/encryptionUtils.js'; // Your encryption helper
 const JWT_SECRET = "ETRHSDFW43EQT7HDFA";
 
-const baseCookieOptions = {
+export const baseCookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // Set to true in production
-    sameSite: 'Strict',
+    sameSite: 'Lax',
     path: '/',
 }
 
@@ -52,10 +52,10 @@ export const loginUser=async(email, password, res, keepLoggedIn = false) => {
             maxAge: cookieMaxAge 
         })
 
-        return{
+        return res.json({
             success:true,
             message: "Login Successful",
-        }
+        })
     } catch (error) {
         console.error("Login error:", error);
         return {success:false, message: "Login Failed", error: error}
@@ -83,4 +83,27 @@ export const logoutUser=async(res)=>{
         maxAge: 0,
     })
     return {success:true, message: "Logout Successful"}
+}
+
+export const saveGoogleRefreshToken = async (userId, refreshToken) => {
+    const encryptedToken = encrypt(refreshToken);
+    await pool.query(
+        'UPDATE users SET google_refresh_token = ? WHERE id = ?',
+        [encryptedToken, userId]
+    )
+}
+
+export const getGoogleRefreshToken = async (userId) => {
+    const [rows] = await pool.query(
+        'SELECT google_refresh_token FROM users WHERE id = ?',
+        [userId]
+    )
+    return rows[0]?.google_refresh_token;
+}
+
+export const deleteGoogleRefreshToken = async (userId) => {
+    await pool.query(
+        'UPDATE users SET google_refresh_token = NULL WHERE id = ?',
+        [userId]
+    )
 }

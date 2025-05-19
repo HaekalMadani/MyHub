@@ -9,12 +9,17 @@ const userTableQuery=  `CREATE TABLE IF NOT EXISTS users (
 
     );`
 
-const postTableQuery = `CREATE TABLE IF NOT EXISTS posts (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
+const postTableQuery = `CREATE TABLE IF NOT EXISTS projects (
+    project_id INT AUTO_INCREMENT PRIMARY KEY, 
     user_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    project_name VARCHAR(255) NOT NULL,
+    project_tag TEXT NOT NULL,
+    project_description TEXT NOT NULL,
+    project_status ENUM('Finished', 'in Development') DEFAULT 'in Development',
+    project_link TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 
     );`
 
@@ -31,7 +36,7 @@ const createTable = async(tableName, query)=>{
 const createAllTable=async()=>{
     try{
         await createTable('users', userTableQuery)
-        await createTable('posts', postTableQuery)
+        await createTable('project', postTableQuery)
         console.log("all tables are created")
     }catch(error){
         console.log("error creating all tables", error);

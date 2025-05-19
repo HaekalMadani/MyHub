@@ -18,12 +18,6 @@ export default function Login() {
 
       if (response.data.success) {
         toast.success(response.data.message || "Login Successful");
-        /*
-        const token = response.data.token;
-        sessionStorage.setItem("authToken", token);
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("KeepLoggedIn", JSON.stringify(true));
-        */
 
         navigate("/dashboard");
       } else {
