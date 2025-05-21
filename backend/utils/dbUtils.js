@@ -21,7 +21,18 @@ const postTableQuery = `CREATE TABLE IF NOT EXISTS projects (
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 
-    );`
+);`
+
+const spendingTableQuery = `CREATE TABLE IF NOT EXISTS spending (
+    user_id INT NOT NULL,
+    spending_id INT AUTO_INCREMENT PRIMARY KEY,
+    amount INT NOT NULL,
+    merchant TEXT,
+    date DATE NOT NULL,
+    message_id VARCHAR(255) UNIQUE,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);`
 
 const createTable = async(tableName, query)=>{
     try{
@@ -37,6 +48,7 @@ const createAllTable=async()=>{
     try{
         await createTable('users', userTableQuery)
         await createTable('project', postTableQuery)
+        await createTable('Spending', spendingTableQuery )
         console.log("all tables are created")
     }catch(error){
         console.log("error creating all tables", error);

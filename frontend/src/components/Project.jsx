@@ -2,11 +2,11 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import { useRef } from 'react';
+import  api  from '../api.js';
 
 const Project = () => {
     const [project, setProject] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     const [projectName, setProjectName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
@@ -41,10 +41,9 @@ const Project = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        setError(null);
 
-        axios.get('http://localhost:4000/api/projects', 
-             { withCredentials: true })
+
+        api.get('/projects')
             .then(res => {
                 if (res.data && res.data.success && Array.isArray(res.data.data)) {
                     setProject(res.data.data);
@@ -52,13 +51,11 @@ const Project = () => {
                     setProject([]);
                 } else {
                     console.error('API request was not successful or data format is incorrect:', res.data);
-                    setError('Failed to fetch projects or data is in an unexpected format.');
                     setProject([]);
                 }
             })
             .catch(err => {
                 console.error('Error fetching project data:', err);
-                setError(err.message || 'An unknown error occurred.');
                 setProject([]);
             })
             .finally(() => {
@@ -68,10 +65,6 @@ const Project = () => {
 
     if (isLoading) {
         return <p>Loading projects...</p>;
-    }
-
-    if (error) {
-        return <p>Error: {error}</p>;
     }
 
     const handleAddProject = async(e) => {
@@ -107,7 +100,6 @@ const Project = () => {
 
         }catch(err){
             console.error('Error adding project:', err);
-            setError(err.message || 'An unknown error occurred.');
         }
     }
 

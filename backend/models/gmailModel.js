@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { pool } from '../config/database.js';
-import { decrypt } from '../utils/encryptionUtils.js'; // assumes your updated encrypt/decrypt helpers
+import { decrypt } from '../utils/encryptionUtils.js'; 
+import { toHalfWidth } from '../utils/extraUtils.js';
 
 function extractBody(payload) {
   if (payload.parts) {
@@ -61,13 +62,37 @@ export async function scanEmails(userId) {
     const email = await gmail.users.messages.get({ userId: 'me', id: msg.id });
     const text = extractBody(email.data.payload);
     const amountMatch = text.match(/(\d{1,3}(,\d{3})*|\d+)\s*(円|Yen)/);
+    const merchantMatch = text.match(/Merchant:\s*(.+)/i);
+    const emailId = msg.id;
 
     if (amountMatch) {
       let amount = parseInt(amountMatch[1].replace(/,/g, ''), 10);
       const date = new Date(parseInt(email.data.internalDate)).toISOString().split('T')[0];
 
-      if (!spending[date]) spending[date] = 0;
-      spending[date] += amount;
+      let merchant = 'Unknown';
+      if (merchantMatch) {
+        const fullMerchant = toHalfWidth(merchantMatch[1].trim());
+        merchant = fullMerchant.split(' ')[0]; 
+      }
+
+      if (!spending[date]) {
+        spending[date] = { amount: 0, merchant: merchant };
+      }
+      spending[date].amount += amount;
+
+      try{
+        await pool.query(
+        'INSERT INTO spending (user_id, amount, merchant, date, message_id) VALUES (?, ?, ?, ?, ?)',
+        [userId, amount, merchant, date, emailId]
+      )
+      }catch(err){
+        if(err.code === 'ER_DUP_ENTRY'){
+          continue
+        }
+        else{ throw err;}
+      }
+
+      
     }
   }
 

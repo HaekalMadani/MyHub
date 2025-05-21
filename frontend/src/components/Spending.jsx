@@ -1,34 +1,56 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import api from '../api';
 
 const Spending = () => {
   const [spending, setSpending] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [googleLinked, setGoogleLinked] = useState(false);
+  
+  const merchantCounts = {};
 
   const toggledetails = () => {
     setIsExpanded(prev => !prev);
   }
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/spending', { withCredentials: true })
-      .then(res => {
-        // If Gmail not linked, backend should return a 401 or empty object
-        if (Object.keys(res.data).length === 0) {
-          setSpending(null); // Treat as unlinked or no data
-        } else {
-          setSpending(res.data);
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching spending data:', err);
-        setSpending(null);
-      })
-      .finally(() => setLoading(false));
+    api.get('/spending/check')
+    .then(res => {
+      if(res.data.success){
+        setGoogleLinked(true)
+      }else{
+        setGoogleLinked(false)
+      }
+    })
+    
+    .catch(err => {
+      console.error('Error checking Google Link @ front', err)
+    })
+
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/spending', {
+      method: 'GET',
+      credentials: 'include'
+    })
+
+    .then(res => res.json())
+    .then(data => {
+      console.log('spending data:', data);
+      if(data.success === false){
+        setSpending(null)
+      }else{
+        setSpending(data)
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching spending:', err);
+      setSpending(null)})
   }, []);
 
-  const spendingData = spending ? Object.entries(spending).map(([date, amount]) => ({ date, amount })) : [];
+  const spendingData = spending ? Object.entries(spending).sort(([a], [b]) => new Date(b) - new Date(a)).map(([date, entries]) => ({ date, amount: entries.reduce((sum, e) => sum + e.amount, 0) })) : [];
 
   const handleLinkGoogle = () => {
     // Redirect to your backend's Google OAuth endpoint
@@ -50,19 +72,41 @@ const Spending = () => {
       });
   }
 
+  if (spending) {
+    Object.values(spending).forEach(entries => {
+      entries.forEach(({ merchant, amount }) => {
+        merchantCounts[merchant] = (merchantCounts[merchant] || 0) + amount;
+      });
+    });
+  }
+
+
+  const sortedMerchants = Object.entries(merchantCounts)
+  .sort((a, b) => b[1] - a[1]);
+
+  const topMerchants = sortedMerchants.slice(0, 5); 
+
+  const merchantChartData = topMerchants.map(([merchant, count]) => ({
+  merchant,
+  count,
+  }));
+
   return (
     <div className='spending-container'>
-      {loading && <><span className="spinner"></span> Retrieving Data...</>}
-
-      {!loading && spending === null && (
+      {spending === null && (
         <div>
           <p>No spending data found.</p>
+        </div>
+      )}
+      {googleLinked === false && (
+        <div className="">
           <button onClick={handleLinkGoogle} className="link-google-btn">Link Google Account</button>
         </div>
       )}
 
-      {spending && (
+      {spending && Object.keys(spending).length > 0 && (
         <>
+        
           <div className="spend-chart">
             <h2>Daily Spending</h2>
             <ResponsiveContainer width='100%' height={300}>
@@ -86,10 +130,10 @@ const Spending = () => {
                   const startDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
                   const endDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0);
 
-                  return Object.entries(spending).reduce((acc, [dateStr, amount]) => {
+                  return Object.entries(spending).reduce((acc, [dateStr, entries]) => {
                     const date = new Date(dateStr);
                     if (date >= startDate && date <= endDate) {
-                      return acc + amount;
+                      return acc + entries.reduce((sum, e) => sum + e.amount, 0);
                     }
                     return acc;
                   }, 0);
@@ -109,10 +153,10 @@ const Spending = () => {
                 : new Date(year, month - 1, 15);
               const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 15);
 
-              return Object.entries(spending).reduce((acc, [dateStr, amount]) => {
+              return Object.entries(spending).reduce((acc, [dateStr, entries]) => {
                 const date = new Date(dateStr);
                 if (date >= startDate && date < endDate) {
-                  return acc + amount;
+                  return acc + entries.reduce((sum, e) => sum + e.amount, 0);
                 }
                 return acc;
               }, 0);
@@ -124,13 +168,36 @@ const Spending = () => {
             <div className="average-spending">
               <p className='detail-title'>Average Spending: </p>
               <p className='detail-data'>¥{(() => {
-                const entries = Object.entries(spending).filter(([date]) => parseInt(date.split('-')[2], 10) >= 15);
-                const total = entries.reduce((acc, [, amount]) => acc + amount, 0);
-                return entries.length > 0 ? Math.round(total / entries.length) : 0;
+                const filtered = Object.entries(spending).flatMap(([dateStr, entries]) => {
+                  const day = parseInt(dateStr.split('-')[2], 10);
+                  if (day >= 15) return entries;
+                  return [];
+                });
+
+                const total = filtered.reduce((acc, entry) => acc + entry.amount, 0);
+                return filtered.length > 0 ? Math.round(total / filtered.length) : 0;
               })()}</p>
             </div>
           </div>
           
+          {spending &&  (
+            <div className="spend-chart" style={{ width: '100%', height: '40vh' }}>
+              <h2>My "investments"</h2>
+              <ResponsiveContainer height="90%">
+                <BarChart
+                  data={merchantChartData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <Tooltip content={MerchantToolTip} />
+                  <CartesianGrid strokeDasharray="1 1" />
+                  <XAxis dataKey="merchant" type="category" />
+                  <YAxis type="number" width={150} />
+                  <Bar dataKey="count" fill="hsl(240, 80%, 70%)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+
           <div className="details">
             <button onClick={toggledetails} className='more-details'>
             {isExpanded ? 'Hide Details' : 'Show Details'}
@@ -139,17 +206,28 @@ const Spending = () => {
           {isExpanded && (
             <div className="">
             <ul>
-              {Object.entries(spending).map(([date, amount]) => (
-                <li key={date}>{date}: ¥{amount}</li>
-              ))}
+              {Object.entries(spending).sort(([a], [b]) => new Date(b) - new Date(a)).map(([date, entries]) => (
+              <li key={date}>
+                <strong>{date}</strong>
+                <ul>
+                  {entries.map((entry, idx) => (
+                    <li key={idx}>¥{entry.amount} - {entry.merchant}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
             </ul>
             </div>
           )}
           </div>
-          
-          <div className="unlink-google">
+
+
+          {googleLinked === true && (
+            <div className="unlink-google">
             <button onClick={handleUnlinkGoogle} className="link-google-btn">Unlink Google Account</button>
           </div>
+          )}
+          
           
         </>
       )}
@@ -165,6 +243,18 @@ const CustomToolTip = ({ active, payload }) => {
         <p className='data1'>¥{payload[0].value}</p>
         <p className='date'>Date:</p>
         <p className='data2'>{payload[0].payload.date}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+const MerchantToolTip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip">
+        <p className='spent'>Total Spent:</p>
+        <p className='data1'>¥{payload[0].value}</p>
       </div>
     );
   }
