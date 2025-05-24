@@ -46,3 +46,41 @@ export const getProjects = async (userId) => {
         return { success: false, message: "Failed to fetch projects", error: error };
     }
 }
+
+// ------ project details ---------
+
+export const editProjectDesc = async (projectId, newDesc) => {
+    const query = `UPDATE projects SET project_description = ? WHERE project_id =?`
+    const value = [newDesc, projectId]
+
+    try{
+        const[rows] = await pool.query(query, value);
+        if(rows.length === 0){
+            return {success: false, message: "No project Found!"}
+        }
+        return { success: true, message: 'Description changed succesfull' };
+    }catch(err){
+        return { success: false, message: "Failed to change projects", err };
+    }
+}
+
+export const editProjectTechStack = async(projectId, stack) => {
+    const query = `UPDATE projects SET tech_stack = ? WHERE project_id = ?`
+    const newStack = JSON.stringify(stack);
+    const value = [newStack, projectId]
+
+
+    try{
+        const[result] = await pool.query(query, value);
+        if(result.affectedRows === 0) { 
+            return{success: false, message: "No project found with the provided ID!"}
+        }
+
+        if (result.changedRows === 0) {
+            return { success: true, message: "Tech stack was already up to date (no changes made)." };
+        }
+        return {success: true, message: 'TechStack changed succesful'}
+    }catch(err){
+        return { success: false, message: "Failed to change TechStack", err };
+    }
+}

@@ -160,6 +160,36 @@
   cursor: pointer;
 }
 
+.button-cont{
+  display: flex;
+  gap: 1rem;
+}
+
+.project-buttons{
+  display: flex;
+  background-color: var(--color-tertiary);
+  justify-content: end;
+  cursor: pointer;
+}
+
+.project-buttons button{
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-family: inherit;
+  font-weight: bold;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+.project-buttons:hover{
+  filter: brightness(0.8);
+  width: 100%;
+}
+
+.project-cards:has(.project-buttons:hover) {
+  border-left: hsla(240, 80%, 80%, 0.80) 9px solid;
+}
+
 .project-details{
   padding-left: 10px;
 }
@@ -201,10 +231,162 @@
   padding: 0.5rem;
   border-radius: 0.5rem;
   white-space: nowrap;
-
-
 }
 
+.project-details-dialog {
+  background: var(--color-primary-light);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-primary-dark);
+  width: 60vw;
+  max-height: 90vh;
+  padding:0 ;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.project-details-content{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.project-details-dialog .submit-project-btn {
+  width: 10vw;
+}
+
+.project-details-dialog::-webkit-scrollbar {
+  width: 8px;
+}
+
+.project-details-dialog::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-dark);
+  border-radius: 10px;
+}
+
+.project-details-dialog::backdrop,
+.add-project-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5); 
+  backdrop-filter: blur(2px); 
+}
+
+
+.tech-stack-list {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.tech-stack-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.project-detail-techstack .remove-tech-btn {
+  width: 4%;
+  aspect-ratio: 1/1;
+  border: none;
+}
+
+.tech-stack-placeholder {
+  font-style: italic;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.add-tech-btn,
+.tech-input-wrapper button {
+  margin-top: 0.5rem;
+  background-color: var(--color-primary-dark);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tech-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tech-input-wrapper input {
+  flex-grow: 1;
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-description-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.edit-desc-btns {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-desc-btns button {
+  background-color: var(--color-primary-dark);
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.project-detail-tag{
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.project-detail-desc,.project-detail-techstack{
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-detail-desc p {
+  text-align: start;
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.project-detail-desc button, .project-detail-techstack .add-tech-btn{
+  width: 10% !important; 
+}
+
+.project-detail-title{
+  display: flex;
+  padding: 3rem;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" id="visual" viewBox="0 0 900 600"%3E%3Crect x="0" y="0" width="900" height="600" fill="%230d2626"%3E%3C/rect%3E%3Cpath d="M0 352L21.5 348C43 344 86 336 128.8 335.3C171.7 334.7 214.3 341.3 257.2 339.5C300 337.7 343 327.3 385.8 322.2C428.7 317 471.3 317 514.2 311.2C557 305.3 600 293.7 642.8 284.7C685.7 275.7 728.3 269.3 771.2 265.3C814 261.3 857 259.7 878.5 258.8L900 258L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="%230d2626" %3E%3C/path%3E%3Cpath d="M0 374L21.5 378.5C43 383 86 392 128.8 390.8C171.7 389.7 214.3 378.3 257.2 381C300 383.7 343 400.3 385.8 410C428.7 419.7 471.3 422.3 514.2 407.5C557 392.7 600 360.3 642.8 345.5C685.7 330.7 728.3 333.3 771.2 334.8C814 336.3 857 336.7 878.5 336.8L900 337L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="%230f2a2a"%3E%3C/path%3E%3Cpath d="M0 432L21.5 428.8C43 425.7 86 419.3 128.8 416C171.7 412.7 214.3 412.3 257.2 413C300 413.7 343 415.3 385.8 418.7C428.7 422 471.3 427 514.2 426C557 425 600 418 642.8 422.3C685.7 426.7 728.3 442.3 771.2 442.8C814 443.3 857 428.7 878.5 421.3L900 414L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="%23102f2f"%3E%3C/path%3E%3Cpath d="M0 480L21.5 481.2C43 482.3 86 484.7 128.8 478.3C171.7 472 214.3 457 257.2 461C300 465 343 488 385.8 494.7C428.7 501.3 471.3 491.7 514.2 483.8C557 476 600 470 642.8 474.7C685.7 479.3 728.3 494.7 771.2 491.8C814 489 857 468 878.5 457.5L900 447L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="%23123434"%3E%3C/path%3E%3Cpath d="M0 537L21.5 532.3C43 527.7 86 518.3 128.8 511.3C171.7 504.3 214.3 499.7 257.2 502.3C300 505 343 515 385.8 523C428.7 531 471.3 537 514.2 534.7C557 532.3 600 521.7 642.8 520C685.7 518.3 728.3 525.7 771.2 531.3C814 537 857 541 878.5 543L900 545L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="%23133939"%3E%3C/path%3E%3C/svg%3E');
+}
+
+.project-detail-title p{
+  font-size: 3.5rem;
+}
+
+.project-detail-techstack label{
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-bottom: 1rem;
+  border-bottom: var(--color-secondary-v2) 1px solid;
+}
+
+.tech-stack-placeholder{
+  text-align: start;
+}
 /* SPENDING */
 
 .spending-container {

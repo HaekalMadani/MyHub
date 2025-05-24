@@ -17,6 +17,9 @@ const postTableQuery = `CREATE TABLE IF NOT EXISTS projects (
     project_description TEXT NOT NULL,
     project_status ENUM('Finished', 'in Development') DEFAULT 'in Development',
     project_link TEXT NOT NULL,
+    tech_stack JSON,
+    roadmap TEXT,
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

@@ -7,6 +7,8 @@ import  api  from '../api.js';
 const Project = () => {
     const [project, setProject] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [saveChange, setSaveChange] = useState(false);
 
     const [projectName, setProjectName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
@@ -16,18 +18,26 @@ const Project = () => {
 
     const [deleteProjectId, setDeleteProjectId] = useState('');
 
+    const [isEditingDesc, setIsEditingDesc] = useState(false);
+    const [editedDescription, setEditedDescription] = useState('')
+    const [showTechInput, setShowTechInput] = useState(false);
+    const [newTech, setNewTech] = useState('');
+    const [roadmap, setRoadmap] = useState('');
+    const [imageURL, setImageURL] = useState('');
+
     const dialogRef = useRef(null);
     const deleteDialogRef = useRef(null);
+    const detailDialogRef = useRef(null);
 
     const toggleAddProject = () => {
     if (dialogRef.current) {
-    if (dialogRef.current.open) {
-      dialogRef.current.close();
-    } else {
+        if (dialogRef.current.open) {
+        dialogRef.current.close();
+            } else {
       dialogRef.current.showModal();
+     }
     }
-  }
-}
+    }
 
     const toggleDeleteProject = () => {
         if(deleteDialogRef.current){
@@ -38,6 +48,18 @@ const Project = () => {
             }
         }
     }
+
+    const openProjectDetails = (project) => {
+    setSelectedProject(project);
+    detailDialogRef.current?.showModal();
+    };
+
+/*
+      useEffect(() => {
+    console.log('Count has been updated:', techStack);
+     }, [techStack]);
+
+     */
 
     useEffect(() => {
         setIsLoading(true);
@@ -121,6 +143,184 @@ const Project = () => {
 
     return (
         <div className="project-container">
+            <dialog ref={detailDialogRef} className="project-details-dialog">
+                {selectedProject && (
+                <form >
+                <div className="project-details-content">
+                    <div className="project-detail-title">
+                        <p>{selectedProject.project_name}</p>
+                    </div>
+                    
+                    <div className="project-detail-tag">
+                        {selectedProject.project_tag.split(',').map((tag, index) => (
+                                        <span key={index} className='project-tag'>{tag.trim()}</span>))}
+                    </div>
+
+                    <div className="project-detail-desc">
+                        {isEditingDesc ? (
+                            <div className="desc-edit-container">
+                                <textarea 
+                                value={editedDescription} 
+                                onChange={(e) => setEditedDescription(e.target.value)}
+                                rows={4}
+                                className='edit-description-textarea'/>
+
+                                <div className="edit-desc-btns">
+                                    <button
+                                    type='button'
+                                    onClick={async ()=> {
+                                        try{
+                                            api.put(`/projects/${selectedProject.project_id}/description`, {
+                                            description: editedDescription,
+                                            });
+
+                                            selectedProject.project_description = editedDescription;
+                                            setIsEditingDesc(false);
+                                            setSaveChange(true)
+                                        }catch(err){
+                                            console.error('Error updating description:', err)
+                                        }
+                                    }}>
+                                        Save
+                                    </button>
+                                    <button type="button" onClick={() => setIsEditingDesc(false)}>Cancel</button>
+                                </div>
+                            </div>
+                        ):(
+                            <div className="">
+                                <p>{selectedProject.project_description || "No description yet."}</p>
+                                <button
+                                    type='button'
+                                    onClick={() => {
+                                        setEditedDescription(selectedProject.project_description || '');
+                                        setIsEditingDesc(true);
+                                    }}>
+                                        edit
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="project-detail-techstack">
+                        <label>Tech Stack:</label>
+
+                        {Array.isArray(selectedProject.tech_stack) && selectedProject.tech_stack.length > 0 ? (
+                            <ul className="tech-stack-list">
+                            {selectedProject.tech_stack.map((tech, index) => (
+                                <li key={index}>
+                                {tech}
+                                <button
+                                    type="button"
+                                    className="remove-tech-btn"
+                                    onClick = {async () => {
+                                        const updatedStack = selectedProject.tech_stack.filter((_, i) => i !== index);
+                                        try{
+                                            await api.put(`/projects/${selectedProject.project_id}/techstack`, {
+                                                newStack: updatedStack,
+                                            });
+
+                                            setSaveChange(true)
+                                            setSelectedProject(prev => ({
+                                                ...prev,
+                                                tech_stack: updatedStack,
+                                            }));
+                                        }catch(error){
+                                            console.error('Error removing tech:', error);
+                                            toast.error("Failed to update tech stack.");
+                                        }
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                                </li>
+                            ))}
+                            </ul>
+                        ) : (
+                            <p className="tech-stack-placeholder">No tech stack added yet.</p>
+                        )}
+
+                        {/* Toggle input field */}
+                        {showTechInput ? (
+                            <div className="tech-input-wrapper">
+                            <input
+                                type="text"
+                                placeholder="Add a technology"
+                                value={newTech}
+                                onChange={(e) => setNewTech(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={async() => {
+                                    const updatedStack = [...(selectedProject.tech_stack || []), newTech]
+                                    try{
+                                        const res = await api.put(`/projects/${selectedProject.project_id}/techstack`, {newStack: updatedStack}
+                                        );
+
+                                        if(res.data.success){
+                                            setSelectedProject(prev => ({
+                                            ...prev,
+                                            tech_stack: updatedStack
+                                            }))
+                                            setNewTech('')
+                                            setSaveChange(true)
+                                        
+
+                                        }else{
+                                            toast.error("Update failed.");
+                                        }
+                                    }catch(err){
+                                        console.error('Error adding tech:', err);
+                                         toast.error("Failed to update tech stack.");
+                                    }
+                                    
+                                }}
+                            >
+                                Save
+                            </button>
+                            <button type="button" onClick={() => {
+                                setShowTechInput(false)}}>Cancel</button>
+                            </div>
+                        ) : (
+                            <button type="button" className="add-tech-btn" onClick={() => setShowTechInput(true)}>
+                            + Add Tech
+                            </button>
+                        )}
+                    </div>
+                    
+                    <div className="project-detail-roadmap">
+                        <label>Roadmap:</label>
+                        <textarea
+                        value={roadmap}
+                        onChange={(e) => setRoadmap(e.target.value)}
+                        placeholder="Add planned features or phases"
+                        />
+                    </div>
+
+                    <div className="project-detail-image">
+                        <label>Image URL:</label>
+                        <input
+                        type="text"
+                        value={imageURL}
+                        onChange={(e) => setImageURL(e.target.value)}
+                        placeholder="Paste an image link"
+                    />
+                    </div>
+                    
+                    {imageURL && <img src={imageURL} alt="Preview" style={{ maxWidth: '100%', marginTop: '10px' }} />}
+                </div>
+                <div className="button-cont">
+                    {saveChange ? (
+                        <button type="button" className='close-project' onClick={() => location.reload()}>Save Changes</button>
+                    ) : (
+                        <button type="button" className='close-project' onClick={() => detailDialogRef.current.close()}>Close</button>
+                    )}
+                    
+                    </div>
+                </form>
+                )}
+                
+            </dialog>
+
 
             <dialog ref={dialogRef} className="add-project-dialog"> 
                 <form onSubmit={handleAddProject}>
@@ -211,7 +411,7 @@ const Project = () => {
             <div className="card-container">
                 {project && project.length > 0 ? (
                         project.map((proj) => (
-                            <div className="project-cards" key={proj.project_id}>
+                            <div className="project-cards" key={proj.project_id} onClick={() => openProjectDetails(proj)}>
                                 <div className="title-background">
                                 <h1>{proj.project_name}</h1>
                                 </div>
@@ -224,7 +424,9 @@ const Project = () => {
                                     ))}
                                 </div>
                                 </div>
-                                
+                                <div className="project-buttons">
+                                    <button>Edit</button>
+                                </div>
                             </div>
                         ))
                     ) : (

@@ -22,6 +22,7 @@
     --color-primary-light: hsl(180, 50%, 15%);
     --color-primary-dark: hsl(180, 50%, 8%);
     --color-secondary: hsl(180, 50%, 90%);
+    --color-secondary-v2: hsla(180, 49%, 90%, 0.438);
     --color-tertiary: hsl(240, 80%, 80%);
     --color-accent: hsl(120, 80%, 80%);
 }
