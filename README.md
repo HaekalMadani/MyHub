@@ -28,5 +28,25 @@ Live Link: Coming Soon
   - Google's GMAIL API (for fetching bank transaction email)
 - API Handling:
   - Axios
+ 
+## To run locally:
+After downloading both frontend and backend folders:
+
+⚠️ Make sure Node.js and its package manager (npm) is installed
+```bash
+# Frontend/backend Libraries install (make sure to do in both backend/frontend folders)
+npm install
+```
+- Run Frontend:
+```bash
+npm run dev
+```
+- Run Backend:
+```bash
+node server.js
+```
+
+Database Setup:
+
 
 
