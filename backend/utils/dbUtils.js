@@ -41,7 +41,7 @@ const roadmapTableQuery = `CREATE TABLE IF NOT EXISTS roadmap_items (
     project_id INT NOT NULL,
     road_id INT AUTO_INCREMENT PRIMARY KEY,
     name TEXT NOT NULL,
-    is_checked BOOLEAN DEFAULT FALSE, 
+    is_checked BOOLEAN NOT NULL DEFAULT 0,
     
     FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE
     );`

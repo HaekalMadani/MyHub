@@ -9,6 +9,7 @@ const Project = () => {
     const [project, setProject] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedProject, setSelectedProject] = useState(null);
+    const [roadmapItems, setRoadmapItems] = useState([]);
     const [saveChange, setSaveChange] = useState(false);
 
     const [projectName, setProjectName] = useState('');
@@ -24,7 +25,7 @@ const Project = () => {
     const [showTechInput, setShowTechInput] = useState(false);
     const [newTech, setNewTech] = useState('');
     const [showRoadmapInput, setShowRoadmapInput] = useState(false)
-    const [newRoadmap, setNewRoadmap] = useState('');
+    const [newRoadmapName, setNewRoadmapName] = useState('');
 
     const [imageURL, setImageURL] = useState('');
 
@@ -60,7 +61,6 @@ const Project = () => {
     useEffect(() => {
         setIsLoading(true);
 
-
         api.get('/projects')
             .then(res => {
                 if (res.data && res.data.success && Array.isArray(res.data.data)) {
@@ -80,6 +80,26 @@ const Project = () => {
                 setIsLoading(false);
             });
     }, []);
+
+    useEffect(() => {
+        if(selectedProject){
+            axios.get(`http://localhost:4000/api/projects/${selectedProject.project_id}/roadmap`)
+            .then(res => {
+                if(res.data && res.data.success && Array.isArray(res.data.data)){
+                    setRoadmapItems(res.data.data);
+                }else{
+                    console.error('API request for roadmap items failed or data format is incorrect:', res.data);
+                    setRoadmapItems([]);
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching roadmap items:', err);
+                setRoadmapItems([]);
+            })
+        }else {
+            setRoadmapItems([]);
+        }
+    }, [selectedProject, saveChange])
 
     if (isLoading) {
         return <p>Loading projects...</p>;
@@ -285,30 +305,55 @@ const Project = () => {
                     
                     <div className="project-detail-roadmap">
                         <label>Roadmap:</label>
-                        {Array.isArray(selectedProject.roadmap) && selectedProject.roadmap.length > 0 ? (
+                        {roadmapItems.length > 0 ? (
                             <ul className='roadmap-list'>
-                            {selectedProject.roadmap.map((road, index) => (
-                                <li key={index}>
-                                <input type="checkbox" />
-                                {road}
+                            {roadmapItems.map((roadItem) => (
+                                <li key={roadItem.road_id}>
+                                    <label>
+                                        <input 
+                                        type="checkbox" 
+                                        checked={roadItem.is_checked}
+                                        onChange={async() => {
+                                            const newCheckedStatus = !roadItem.is_checked;
+
+                                            setRoadmapItems(prevItems =>
+                                            prevItems.map(item => 
+                                                item.road_id === roadItem.road_id ? { ...item, is_checked: newCheckedStatus } : item
+                                                )
+                                            );
+
+                                            try {
+                                                await api.put(`/projects/${selectedProject.project_id}/roadmap`,{
+                                                    road_id: roadItem.road_id,
+                                                    is_checked: newCheckedStatus
+                                                });
+
+                                                setSaveChange(true);
+                                            } catch (error) {
+                                                console.error('Error updating roadmap item:', error);
+                                                toast.error("Failed to update roadmap item.");
+                                                setRoadmapItems(prevItems =>
+                                                    prevItems.map(item =>
+                                                        item.road_id === roadItem.roadItem ? { ...item, is_checked: !newCheckedStatus} : item
+                                                    )
+                                                )
+                                            }
+                                        }}
+                                        />
+                                        {roadItem.name}
+                                    </label>
+                                
                                 <button
                                     type='button'
                                     className='remove-tech-btn'
                                     onClick={async() => {
-                                        const updatedStack = selectedProject.roadmap.filter((_, i) => i !== index);
-                                        try{
-                                            await api.put(`/projects/${selectedProject.project_id}/roadmap`, {
-                                                roadmap: updatedStack,
-                                            })
-
-                                            setSaveChange(true)
-                                            setSelectedProject(prev => ({
-                                                ...prev,
-                                                roadmap: updatedStack
-                                            }))
-                                        }catch(err){
-                                            console.error('Error removing roadmap:', err)
-                                            toast.error("Failed to update roadmap.");
+                                        try {
+                                            setRoadmapItems(prevItems => prevItems.filter(item => item.roadItem !== roadItem.road_id));
+                                            await axios.delete(`http://localhost:4000/api/projects/${roadItem.road_id}/roadmap`);
+                                              setSaveChange(true);  
+                                        } catch (err) {
+                                            console.error('Error removing roadmap item:', err);
+                                            toast.error("Failed to remove roadmap item.");
                                         }
                                     }}
                                 >
@@ -329,34 +374,39 @@ const Project = () => {
                             <input
                                 type="text"
                                 placeholder="Add a technology"
-                                value={newRoadmap}
-                                onChange={(e) => setNewRoadmap(e.target.value)}
+                                value={newRoadmapName}
+                                onChange={(e) => setNewRoadmapName(e.target.value)}
                             />
                             <button
                                 type="button"
                                 onClick={async() => {
-                                    const updatedStack = [...(selectedProject.roadmap || []), newRoadmap]
-                                    try{
-                                        const res = await api.put(`/projects/${selectedProject.project_id}/roadmap`, {roadmap: updatedStack}
-                                        );
-
-                                        if(res.data.success){
-                                            setSelectedProject(prev => ({
-                                            ...prev,
-                                            roadmap: updatedStack
-                                            }))
-                                            setNewRoadmap('')
-                                            setSaveChange(true)
-                                        
-
-                                        }else{
-                                            toast.error("Update failed.");
-                                        }
-                                    }catch(err){
-                                        console.error('Error adding roadmap:', err);
-                                         toast.error("Failed to update roadmap.");
+                                    if(!newRoadmapName.trim() || !selectedProject){
+                                        toast.warn("Roadmap item cannot be empty");
+                                        return
                                     }
                                     
+                                    try {
+                                        const response = await api.post(`/projects/${selectedProject.project_id}/roadmap`, {
+                                            name: newRoadmapName.trim(),
+                                            is_checked: "0",
+                                        })
+
+                                        console.log("Response from adding roadmap item:", response.data); // TEST
+
+                                        if(response.data.success){
+                                            console.log("Data for new roadmap item:", response.data.data); // TEST
+                                            toast.success("Roadmap item added!");
+                                            setRoadmapItems(prevItems => [...prevItems, response.data.data]);
+                                            setNewRoadmapName('');
+                                            setShowRoadmapInput(false);
+                                            setSaveChange(true);
+                                        }else{
+                                            toast.error(response.data.message || "Failed to add roadmap item.");
+                                        }
+                                    } catch (err) {
+                                        console.error('Error adding roadmap item:', err);
+                                        toast.error("Failed to add roadmap item.");
+                                    }
                                 }}
                             >
                                 Save

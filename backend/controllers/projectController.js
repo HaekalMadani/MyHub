@@ -1,4 +1,4 @@
-import { createProject, deleteProject, getProjects, editProjectDesc, editProjectTechStack, editRoadmap } from "../services/projectService.js";
+import { createProject, deleteProject, getProjects, editProjectDesc, editProjectTechStack, editRoadmap, createRoadmap, deleteRoadmap, getRoadmap, updateRoadmap } from "../services/projectService.js";
 
 export const createProjectController = async (req, res) => {
     const userId = req.user.id; 
@@ -99,4 +99,70 @@ export const editRoadmapController = async (req, res) => {
         console.error("Caught unexpected error in editRoadmapController:", err);
         return res.status(500).json({ success: false, message: "An internal server error occurred while changing Roadmap" });
     }
+}
+
+export const createRoadmapController = async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    try{
+        const response = await createRoadmap(id, data)
+        if(response.success){
+            return res.status(200).json(response);
+        }else{
+            return res.status(400).json(response);
+        }
+    }catch(err){
+        console.error("Caught unexpected error in createRoadmapController:", err);
+        return res.status(500).json({ success: false, message: "An internal server error occurred while creating Roadmap" });
+    }
+}
+
+export const deleteRoadmapController = async(req, res) => {
+    const { id } = req.params;
+
+
+    try {
+        const response = await deleteRoadmap(id);
+        if(response.success){
+            return res.status(200).json(response);
+        }else{
+            return res.status(400).json(response);
+        }
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "An internal server error occurred while deleting Roadmap" });
+    }
+}
+
+export const getRoadmapController = async(req, res) => {
+    const { id } = req.params;
+
+    try {
+        const response = await getRoadmap(id)
+        if(response.success){
+            return res.status(200).json(response);
+        }else{
+            return res.status(400).json(response);
+        }
+    } catch (error) {
+        console.error("Caught unexpected error in getroadmapController:", error);
+        return res.status(500).json({ success: false, message: "An internal server error occurred while getting Roadmap", error: error });
+    }
+}
+
+export const updateRoadmapController = async(req, res) => {
+    const data = req.body;
+    const { id } = req.params;
+
+    try {
+        const response = await updateRoadmap(id, data)
+        if(response.success){
+            return res.status(200).json(response);
+        }else{
+            return res.status(400).json(response);
+        }
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "An internal server error occurred while updating Roadmap", error: error });
+    }
+
 }
