@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import { useRef } from 'react';
 import  api  from '../api.js';
+import { FaRegEdit } from "react-icons/fa";
 
 const Project = () => {
     const [project, setProject] = useState(null);
@@ -22,7 +23,9 @@ const Project = () => {
     const [editedDescription, setEditedDescription] = useState('')
     const [showTechInput, setShowTechInput] = useState(false);
     const [newTech, setNewTech] = useState('');
-    const [roadmap, setRoadmap] = useState('');
+    const [showRoadmapInput, setShowRoadmapInput] = useState(false)
+    const [newRoadmap, setNewRoadmap] = useState('');
+
     const [imageURL, setImageURL] = useState('');
 
     const dialogRef = useRef(null);
@@ -53,13 +56,6 @@ const Project = () => {
     setSelectedProject(project);
     detailDialogRef.current?.showModal();
     };
-
-/*
-      useEffect(() => {
-    console.log('Count has been updated:', techStack);
-     }, [techStack]);
-
-     */
 
     useEffect(() => {
         setIsLoading(true);
@@ -289,11 +285,91 @@ const Project = () => {
                     
                     <div className="project-detail-roadmap">
                         <label>Roadmap:</label>
-                        <textarea
-                        value={roadmap}
-                        onChange={(e) => setRoadmap(e.target.value)}
-                        placeholder="Add planned features or phases"
-                        />
+                        {Array.isArray(selectedProject.roadmap) && selectedProject.roadmap.length > 0 ? (
+                            <ul className='roadmap-list'>
+                            {selectedProject.roadmap.map((road, index) => (
+                                <li key={index}>
+                                <input type="checkbox" />
+                                {road}
+                                <button
+                                    type='button'
+                                    className='remove-tech-btn'
+                                    onClick={async() => {
+                                        const updatedStack = selectedProject.roadmap.filter((_, i) => i !== index);
+                                        try{
+                                            await api.put(`/projects/${selectedProject.project_id}/roadmap`, {
+                                                roadmap: updatedStack,
+                                            })
+
+                                            setSaveChange(true)
+                                            setSelectedProject(prev => ({
+                                                ...prev,
+                                                roadmap: updatedStack
+                                            }))
+                                        }catch(err){
+                                            console.error('Error removing roadmap:', err)
+                                            toast.error("Failed to update roadmap.");
+                                        }
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                                </li>
+                            ))}
+
+                            </ul>
+                        ) : 
+                        (
+                            <p className="tech-stack-placeholder">No roadmap added yet.</p>
+                        )}
+                        
+                        
+                        {showRoadmapInput ? (
+                            <div className="tech-input-wrapper">
+                            <input
+                                type="text"
+                                placeholder="Add a technology"
+                                value={newRoadmap}
+                                onChange={(e) => setNewRoadmap(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={async() => {
+                                    const updatedStack = [...(selectedProject.roadmap || []), newRoadmap]
+                                    try{
+                                        const res = await api.put(`/projects/${selectedProject.project_id}/roadmap`, {roadmap: updatedStack}
+                                        );
+
+                                        if(res.data.success){
+                                            setSelectedProject(prev => ({
+                                            ...prev,
+                                            roadmap: updatedStack
+                                            }))
+                                            setNewRoadmap('')
+                                            setSaveChange(true)
+                                        
+
+                                        }else{
+                                            toast.error("Update failed.");
+                                        }
+                                    }catch(err){
+                                        console.error('Error adding roadmap:', err);
+                                         toast.error("Failed to update roadmap.");
+                                    }
+                                    
+                                }}
+                            >
+                                Save
+                            </button>
+                            <button type="button" onClick={() => {
+                                setShowRoadmapInput(false)}}>Cancel</button>
+                            </div>
+                        ) : (
+                            <button type="button" className="add-tech-btn" onClick={() => setShowRoadmapInput(true)}>
+                            + Add Tech
+                            </button>
+                        )}
+
                     </div>
 
                     <div className="project-detail-image">
@@ -380,6 +456,7 @@ const Project = () => {
                 <form onSubmit={handleDeleteProject}>
                     <select 
                     onChange={(e) => setDeleteProjectId(e.target.value)}>
+                        <option value="">------</option>
                       {project && project.length > 0 ? (
                         project.map((proj) => (
                             <option value={proj.project_id}>
@@ -413,7 +490,7 @@ const Project = () => {
                         project.map((proj) => (
                             <div className="project-cards" key={proj.project_id} onClick={() => openProjectDetails(proj)}>
                                 <div className="title-background">
-                                <h1>{proj.project_name}</h1>
+                                <p>{proj.project_name}</p>
                                 </div>
                                 <div className="project-details">
                                     <p className='project-desc'>{proj.project_description}</p>
@@ -425,7 +502,9 @@ const Project = () => {
                                 </div>
                                 </div>
                                 <div className="project-buttons">
-                                    <button>Edit</button>
+                                    <button>
+                                        <FaRegEdit className="icon-tertiary" />
+                                    </button>
                                 </div>
                             </div>
                         ))

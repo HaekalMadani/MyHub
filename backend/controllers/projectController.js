@@ -1,4 +1,4 @@
-import { createProject, deleteProject, getProjects, editProjectDesc, editProjectTechStack } from "../services/projectService.js";
+import { createProject, deleteProject, getProjects, editProjectDesc, editProjectTechStack, editRoadmap } from "../services/projectService.js";
 
 export const createProjectController = async (req, res) => {
     const userId = req.user.id; 
@@ -79,7 +79,24 @@ export const editProjectTechStackController = async (req, res) => {
             return res.status(400).json(response);
         }
     }catch(err){
-        console.error("Caught unexpected error in editdescController:", err);
+        console.error("Caught unexpected error in editTechStackController:", err);
         return res.status(500).json({ success: false, message: "An internal server error occurred while changing Tech Stack" });
+    }
+}
+
+export const editRoadmapController = async (req, res) => {
+    const {id} = req.params;
+    const { roadmap } = req.body;
+
+    try{
+        const response = await editRoadmap(id, roadmap)
+        if(response.success){
+            return res.status(200).json(response);
+        }else{
+            return res.status(400).json(response);
+        }
+    }catch(err){
+        console.error("Caught unexpected error in editRoadmapController:", err);
+        return res.status(500).json({ success: false, message: "An internal server error occurred while changing Roadmap" });
     }
 }

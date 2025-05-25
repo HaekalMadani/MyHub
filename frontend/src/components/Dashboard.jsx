@@ -70,9 +70,6 @@ export default function Dashboard(){
         <div className="container">
             <Sidebar userData={userData} />
             <Topbar userData={userData}/>
-            <div className="subheader">
-                <p>MyDashboard</p>
-            </div>
             <div className="dashboard-container">
                 <div className="dashtab-container">
                     <div 

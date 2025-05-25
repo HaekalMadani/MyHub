@@ -84,3 +84,24 @@ export const editProjectTechStack = async(projectId, stack) => {
         return { success: false, message: "Failed to change TechStack", err };
     }
 }
+
+export const editRoadmap = async(projectId, roadStack) => {
+    const query = `UPDATE projects SET roadmap = ? WHERE project_id = ?`
+    const stringRoadStack = JSON.stringify(roadStack);
+    const value = [stringRoadStack, projectId]
+
+    try{
+        const [result] = await pool.query(query, value);
+        if(result.affectedRows === 0){
+            return {success: false, message: "No project found with the provided ID!"}
+        }
+
+        if(result.changedRows === 0){
+            return { success: true, message: "Roadmap was already up to date (no changes made)." };
+        }
+        return {success: true, message: 'Roadmap changed succesful'}
+    }catch(err){
+        return { success: false, message: "Failed to change roadmap", err };
+    }
+}
+

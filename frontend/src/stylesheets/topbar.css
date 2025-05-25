@@ -1,16 +1,14 @@
 @import './index.css';
 
 .topbar {
-  grid-column: 2;
-  grid-row: 1;
+  grid-template-columns: 19fr .5fr;
   display: grid;
   grid-auto-flow: column;
   gap: 10px;
   justify-content: end;
   align-items: center;
-  padding-right: 20px;
-
-
+  margin-left: 2rem;
+  margin-top: 2rem;
   z-index: 100;
  
 }
@@ -29,52 +27,8 @@
     color: var(--color-primary);
 }
 
-.topbar button {
-  background: var(--color-tertiary);
-  width: max-content;
-  height: min-content;
-  padding: 10px 10px;
-  color: var(--color-primary);
-  font-size: 1rem;
-  font-weight: bold;
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-.topbar button:hover {
-  background-color: var(--color-tertiary);
-}
 
-.topbar button:focus-visible {
-  outline: 2px solid var(--color-secondary);
-}
-
-.topbar svg {
-  fill: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.topbar span {
-  white-space: nowrap;
-  overflow: hidden;
-  display: inline-block;
-  max-width: 0;
-  opacity: 0;
-  margin-left: 0;
-  transition: max-width 0.5s ease-out, opacity 0.5s ease-out, margin-left 0.5s;
-}
-
-.topbar button:hover span {
-  max-width: 200px;
-  opacity: 1;
-  margin-left: 8px;
-}
 
 @media (max-width: 600px) {
   .topbar {

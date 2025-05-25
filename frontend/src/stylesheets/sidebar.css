@@ -19,6 +19,7 @@ a {
   top: 0;
   height: 100vh;
   width: 100%;
+  border-right: var(--color-border) 1px solid;
 
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -26,14 +27,11 @@ a {
 
 .sidebar .logo {
   display: flex;
-  justify-content: center;
   align-items: center;  
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   width: 70%;
-  border-bottom: 2px solid var(--color-primary-light);
-  padding-bottom: 1rem;
-  margin: 0 auto;
+  margin-left: 1rem;
 }
 
 .sidebar ul {
@@ -42,13 +40,18 @@ a {
   display: flex;
   flex-direction: column;
   padding-inline-start: 10px;
-  gap: 2rem;
-  margin-top: 4rem;
+  gap: .5rem;
+  margin-top: 2rem;
 }
 
 .list-item {
   display: flex;
   align-items: center;
+  color: inherit;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+  font-weight: 100;
 }
 
 .list-item-link {
@@ -68,6 +71,7 @@ a {
 .list-item-link:hover {
   background-color: var(--color-primary-light);
 
+
 }
 
 .list-item-link:focus {
@@ -82,6 +86,7 @@ a {
     color: var(--color-secondary);
     border-radius: 4px;
     box-sizing: border-box;
+    font-weight: 450;
   }
   
 .sidebar .icon {
@@ -90,13 +95,16 @@ a {
 }
 
 .user-side{
-    margin-top: auto;
     display: flex;
     align-items: center;
     gap: 10px;
     background-color: var(--color-tertiary);
     padding: 5px 10px;
     border-radius: 8px;
+    margin-bottom: 0.5rem;
+    width: 80%;
+    align-self: center;
+    cursor: pointer;
 }
 
 .user-avatar {
@@ -105,3 +113,48 @@ a {
     border-radius: 50%;
     object-fit: cover;
   }
+
+.line{
+  margin-top: auto;
+  border-top: var(--color-border) 1px solid;
+  color: var(--color-primary);
+}
+
+.user-stuff{
+  display: flex;
+  gap: 1rem;
+}
+
+.user-stuff button {
+  background: var(--color-tertiary);
+  width: max-content;
+  height: min-content;
+  padding: 10px 10px;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+.user-stuff svg {
+  fill: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.user-stuff span {
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
+  transition: max-width 0.5s ease-out, opacity 0.5s ease-out, margin-left 0.5s;
+}

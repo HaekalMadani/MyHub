@@ -18,7 +18,7 @@ const postTableQuery = `CREATE TABLE IF NOT EXISTS projects (
     project_status ENUM('Finished', 'in Development') DEFAULT 'in Development',
     project_link TEXT NOT NULL,
     tech_stack JSON,
-    roadmap TEXT,
+    roadmap JSON,
     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -37,6 +37,15 @@ const spendingTableQuery = `CREATE TABLE IF NOT EXISTS spending (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );`
 
+const roadmapTableQuery = `CREATE TABLE IF NOT EXISTS roadmap_items (
+    project_id INT NOT NULL,
+    road_id INT AUTO_INCREMENT PRIMARY KEY,
+    name TEXT NOT NULL,
+    is_checked BOOLEAN DEFAULT FALSE, 
+    
+    FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE
+    );`
+
 const createTable = async(tableName, query)=>{
     try{
 
@@ -51,7 +60,8 @@ const createAllTable=async()=>{
     try{
         await createTable('users', userTableQuery)
         await createTable('project', postTableQuery)
-        await createTable('Spending', spendingTableQuery )
+        await createTable('Spending', spendingTableQuery)
+        await createTable('project_roadmap', roadmapTableQuery)
         console.log("all tables are created")
     }catch(error){
         console.log("error creating all tables", error);
