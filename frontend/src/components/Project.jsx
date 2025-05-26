@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { useRef } from 'react';
 import  api  from '../api.js';
 import { FaRegEdit } from "react-icons/fa";
+import { useMemo } from 'react';
+
 
 const Project = () => {
     const [project, setProject] = useState(null);
@@ -15,7 +17,7 @@ const Project = () => {
     const [projectName, setProjectName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
     const [projectTag, setProjectTag] = useState('Web Development');
-    const [projectStatus, setProjectStatus] = useState('In Development'); 
+    const [projectStatus, setProjectStatus] = useState('In Development');
     const [projectLinks, setProjectLinks] = useState('');
 
     const [deleteProjectId, setDeleteProjectId] = useState('');
@@ -26,8 +28,6 @@ const Project = () => {
     const [newTech, setNewTech] = useState('');
     const [showRoadmapInput, setShowRoadmapInput] = useState(false)
     const [newRoadmapName, setNewRoadmapName] = useState('');
-
-    const [imageURL, setImageURL] = useState('');
 
     const dialogRef = useRef(null);
     const deleteDialogRef = useRef(null);
@@ -57,6 +57,17 @@ const Project = () => {
     setSelectedProject(project);
     detailDialogRef.current?.showModal();
     };
+
+    const projectProgress = useMemo(() => {
+    if (!roadmapItems || roadmapItems.length === 0) {
+        return 0; // No items, 0% complete
+    }
+
+    const totalItems = roadmapItems.length;
+    const checkedItems = roadmapItems.filter(item => item.is_checked).length;
+
+    return Math.round((checkedItems / totalItems) * 100);
+}, [roadmapItems]); 
 
     useEffect(() => {
         setIsLoading(true);
@@ -304,14 +315,24 @@ const Project = () => {
                     </div>
                     
                     <div className="project-detail-roadmap">
-                        <label>Roadmap:</label>
+                        <label>Roadmap:
+                           <div className="progress-bar-container">
+                            <div
+                                className="progress-bar-fill"
+                                style={{ width: `${projectProgress}%` }}
+                            ></div>
+                           </div> 
+                        </label>
+                         
+
                         {roadmapItems.length > 0 ? (
                             <ul className='roadmap-list'>
                             {roadmapItems.map((roadItem) => (
                                 <li key={roadItem.road_id}>
-                                    <label>
+                                    <label className='roadmap-list-label'>
                                         <input 
                                         type="checkbox" 
+                                        className='hidden-checkbox'
                                         checked={roadItem.is_checked}
                                         onChange={async() => {
                                             const newCheckedStatus = !roadItem.is_checked;
@@ -340,25 +361,27 @@ const Project = () => {
                                             }
                                         }}
                                         />
-                                        {roadItem.name}
+                                        <span class="custom-checkbox-styled"></span>
+                                        <span class="custom-checkbox-text">{roadItem.name}</span>
+                                        
                                     </label>
                                 
-                                <button
-                                    type='button'
-                                    className='remove-tech-btn'
-                                    onClick={async() => {
-                                        try {
-                                            setRoadmapItems(prevItems => prevItems.filter(item => item.roadItem !== roadItem.road_id));
-                                            await axios.delete(`http://localhost:4000/api/projects/${roadItem.road_id}/roadmap`);
-                                              setSaveChange(true);  
-                                        } catch (err) {
-                                            console.error('Error removing roadmap item:', err);
-                                            toast.error("Failed to remove roadmap item.");
-                                        }
-                                    }}
-                                >
-                                    ✕
-                                </button>
+                                    <button
+                                        type='button'
+                                        className='remove-tech-btn'
+                                        onClick={async() => {
+                                            try {
+                                                setRoadmapItems(prevItems => prevItems.filter(item => item.road_id !== roadItem.road_id));
+                                                await axios.delete(`http://localhost:4000/api/projects/${roadItem.road_id}/roadmap`);
+                                                setSaveChange(true);  
+                                            } catch (err) {
+                                                console.error('Error removing roadmap item:', err);
+                                                toast.error("Failed to remove roadmap item.");
+                                            }
+                                        }}
+                                    >
+                                        ✕
+                                    </button>
                                 </li>
                             ))}
 
@@ -416,23 +439,11 @@ const Project = () => {
                             </div>
                         ) : (
                             <button type="button" className="add-tech-btn" onClick={() => setShowRoadmapInput(true)}>
-                            + Add Tech
+                            + Add Roadmap
                             </button>
                         )}
 
                     </div>
-
-                    <div className="project-detail-image">
-                        <label>Image URL:</label>
-                        <input
-                        type="text"
-                        value={imageURL}
-                        onChange={(e) => setImageURL(e.target.value)}
-                        placeholder="Paste an image link"
-                    />
-                    </div>
-                    
-                    {imageURL && <img src={imageURL} alt="Preview" style={{ maxWidth: '100%', marginTop: '10px' }} />}
                 </div>
                 <div className="button-cont">
                     {saveChange ? (
@@ -543,8 +554,9 @@ const Project = () => {
                                 <p>{proj.project_name}</p>
                                 </div>
                                 <div className="project-details">
-                                    <p className='project-desc'>{proj.project_description}</p>
+                                <p className='project-desc'>{proj.project_description}</p>
                                 <p className='project-status'>{proj.project_status}</p>
+                                
                                 <div className='tag-container'>
                                     {proj.project_tag.split(',').map((tag, index) => (
                                         <span key={index} className='project-tag'>{tag.trim()}</span>

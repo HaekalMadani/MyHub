@@ -78,12 +78,14 @@ export default function Dashboard(){
                     onClick={() => setActiveDashTab('projectTab')}>
                         <p>Project</p>
                     </div>
-                    <div
+                    
+                    {/*<div
                      className={`dashtab ${activeDashTab === 'todoTab' ? 'active' : ''}`} 
                      id="todoTab"
                      onClick={() => setActiveDashTab('todoTab')}>
                         <p>To-Do</p>
-                    </div>
+                    </div> */}
+                    
                     <div
                     className={`dashtab ${activeDashTab === 'spendingTab' ? 'active' : ''}`}
                     id="spendingTab"

@@ -310,6 +310,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.3rem;
+  font-weight: 100;
 }
 
 .roadmap-list{
@@ -320,15 +321,20 @@
     display: flex;
     align-items: center;
     margin-bottom: 0.3rem;
-    gap: 10px
+    gap: 10px;
  }
-
-
 
 .project-detail-techstack .remove-tech-btn {
   width: 4%;
   aspect-ratio: 1/1;
   border: none;
+  border-radius: 100px;
+}
+
+.project-detail-roadmap .remove-tech-btn:hover, .project-detail-techstack .remove-tech-btn:hover {
+  background-color: red;
+  color: var(--color-secondary);
+  opacity: .7;
 }
 
 .project-detail-roadmap .remove-tech-btn{
@@ -336,6 +342,8 @@
   aspect-ratio: 1/1;
   border: none;
   margin-left: auto;
+  margin-top: 0;
+  border-radius: 100px;
 }
 
 .tech-stack-placeholder {
@@ -435,6 +443,92 @@
   text-align: start;
 }
 
+.progress-bar-container {
+    width: 80%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    height: .5rem;
+    margin-top: 15px;  
+    position: relative; 
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+}
+
+.roadmap-list .roadmap-list-label{
+  display: inline-block;
+  align-items: center;
+  font-size: 1rem;
+  border: none;
+  font-weight: 100;
+  cursor: pointer;
+
+  user-select: none;
+}
+
+.custom-checkbox-styled {
+    display: inline-block;
+    width: 20px; 
+    height: 20px;
+    border: 2px solid #ccc; 
+    border-radius: 4px; 
+    margin-right: 10px; 
+    position: relative; 
+    transition: all 0.2s ease-in-out;
+    flex-shrink: 0; 
+}
+
+.hidden-checkbox:checked + .custom-checkbox-styled {
+    background-color: #4CAF50; 
+    border-color: #4CAF50; 
+}
+
+.hidden-checkbox:checked + .custom-checkbox-styled::after {
+    content: '';
+    position: absolute;
+    left: 6px; 
+    top: 2px; 
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0; 
+    transform: rotate(45deg); 
+
+    animation: checkmark-appear 0.2s ease-in-out;
+}
+
+.hidden-checkbox:focus + .custom-checkbox-styled {
+    outline: none; 
+}
+
+@keyframes checkmark-appear {
+    from {
+        transform: rotate(45deg) scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: rotate(45deg) scale(1);
+        opacity: 1;
+    }
+}
+
+.hidden-checkbox {
+    /* Visually hide, but keep accessible */
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
 
 /* SPENDING */
 
