@@ -48,5 +48,10 @@ node server.js
 
 Database Setup:
 
+## Screenshots:
+![alt text](https://github.com/HaekalMadani/MyHub/blob/main/img/ProjectDash.png?raw=true)
+
+![at text](https://github.com/HaekalMadani/MyHub/blob/main/img/SpendingDash.png?raw=true)
+
 
 
