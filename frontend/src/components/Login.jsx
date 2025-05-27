@@ -14,7 +14,7 @@ export default function Login() {
     console.log(email, password); // Debugging line
 
     try {
-      const response = await axios.post("feisty-dedication-production.up.railway.app/api/auth/login-user", { email, password, keepLoggedIn });
+      const response = await axios.post("/auth/login-user", { email, password, keepLoggedIn });
 
       if (response.data.success) {
         toast.success(response.data.message || "Login Successful");

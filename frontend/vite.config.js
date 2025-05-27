@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
   proxy: {
     '/api': {
-      target: 'https://myhub-tw2f.onrender.com',
+      target: 'feisty-dedication-production.up.railway.app',
       changeOrigin: true,
       secure: false,
     },

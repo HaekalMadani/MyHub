@@ -6,10 +6,10 @@ const { encrypt } = require('../utils/encryptionUtils.js'); // Your encryption h
 const JWT_SECRET = "ETRHSDFW43EQT7HDFA";
 
 const baseCookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // Set to true in production
-    sameSite: 'Lax',
-    path: '/',
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+  path: '/',
 }
 
 const registerUser = async(user)=>{

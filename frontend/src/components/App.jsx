@@ -12,7 +12,7 @@ import Dashboard from "./Dashboard";
 function App() {
   
 
-  axios.defaults.baseURL = 'https://myhub-tw2f.onrender.com/api';
+  axios.defaults.baseURL = 'https://feisty-dedication-production.up.railway.app/api';
   axios.defaults.withCredentials = true;
 
   return (
