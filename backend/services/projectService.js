@@ -1,7 +1,7 @@
 const { pool } = require("../config/database.js");
 
 
-export const createProject = async(userId, projectData) => {
+const createProject = async(userId, projectData) => {
     const { projectName, projectDescription, projectTag, projectStatus, projectLinks} = projectData;
     const query = `INSERT INTO projects (user_id, project_name, project_description, project_tag, project_status, project_link) VALUES (?, ?, ?, ?, ?, ?)`;
     const values = [userId, projectName, projectDescription, projectTag, projectStatus, projectLinks];
@@ -16,7 +16,7 @@ export const createProject = async(userId, projectData) => {
     
 }
 
-export const deleteProject = async (userId, projectId) => {
+const deleteProject = async (userId, projectId) => {
     const query = `DELETE FROM projects WHERE user_id = ? AND project_id = ?`;
     const values = [userId, projectId];
    
@@ -32,7 +32,7 @@ export const deleteProject = async (userId, projectId) => {
     }
 }
 
-export const getProjects = async (userId) => {
+const getProjects = async (userId) => {
     const query = `SELECT * FROM projects WHERE user_id =?`;
     const value = [userId];
 
@@ -50,7 +50,7 @@ export const getProjects = async (userId) => {
 
 // ------ project details ---------
 
-export const editProjectDesc = async (projectId, newDesc) => {
+const editProjectDesc = async (projectId, newDesc) => {
     const query = `UPDATE projects SET project_description = ? WHERE project_id =?`
     const value = [newDesc, projectId]
 
@@ -65,7 +65,7 @@ export const editProjectDesc = async (projectId, newDesc) => {
     }
 }
 
-export const editProjectTechStack = async(projectId, stack) => {
+const editProjectTechStack = async(projectId, stack) => {
     const query = `UPDATE projects SET tech_stack = ? WHERE project_id = ?`
     const newStack = JSON.stringify(stack);
     const value = [newStack, projectId]
@@ -86,7 +86,7 @@ export const editProjectTechStack = async(projectId, stack) => {
     }
 }
 
-export const editRoadmap = async(projectId, roadStack) => {
+const editRoadmap = async(projectId, roadStack) => {
     const query = `UPDATE projects SET roadmap = ? WHERE project_id = ?`
     const stringRoadStack = JSON.stringify(roadStack);
     const value = [stringRoadStack, projectId]
@@ -106,7 +106,7 @@ export const editRoadmap = async(projectId, roadStack) => {
     }
 }
 
-export const createRoadmap = async(projectId, roadmapData) => {
+const createRoadmap = async(projectId, roadmapData) => {
     const { name, is_checked } = roadmapData;
     const insertQuery = `INSERT INTO roadmap_items (project_id, name, is_checked) VALUES (?, ?, ?);`;
     const insertValues = [projectId, name, is_checked];
@@ -142,7 +142,7 @@ export const createRoadmap = async(projectId, roadmapData) => {
     }
 };
 
-export const deleteRoadmap = async(roadId) => {
+const deleteRoadmap = async(roadId) => {
     const query = `DELETE FROM roadmap_items WHERE road_id = ?`;
     const values = [roadId];
 
@@ -157,7 +157,7 @@ export const deleteRoadmap = async(roadId) => {
     }
 }
 
-export const getRoadmap = async(projectId) => {
+const getRoadmap = async(projectId) => {
     const query = `SELECT * FROM roadmap_items WHERE project_id = ?`;
     const value = [projectId];
 
@@ -179,7 +179,7 @@ export const getRoadmap = async(projectId) => {
     }
 }
 
-export const updateRoadmap = async(projectId, updateData) => {
+const updateRoadmap = async(projectId, updateData) => {
     const query = `UPDATE roadmap_items SET is_checked = ? WHERE project_id = ? AND road_id = ?`
     const { road_id, is_checked} = updateData;
     const value = [is_checked, projectId, road_id];
@@ -198,3 +198,5 @@ export const updateRoadmap = async(projectId, updateData) => {
         return { success: false, message: "Failed to update projects", error: error };
     }
 }
+
+module.exports = {updateRoadmap, getRoadmap, deleteRoadmap, createRoadmap, editRoadmap, editProjectTechStack, editProjectDesc, getProjects, deleteProject, createProject }

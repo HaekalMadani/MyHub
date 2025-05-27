@@ -5,14 +5,14 @@ const { encrypt } = require('../utils/encryptionUtils.js'); // Your encryption h
 
 const JWT_SECRET = "ETRHSDFW43EQT7HDFA";
 
-export const baseCookieOptions = {
+const baseCookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // Set to true in production
     sameSite: 'Lax',
     path: '/',
 }
 
-export const registerUser = async(user)=>{
+const registerUser = async(user)=>{
     console.log(user)
 
     try {
@@ -27,7 +27,7 @@ export const registerUser = async(user)=>{
     }
 }
 
-export const loginUser=async(email, password, res, keepLoggedIn = false) => {
+const loginUser=async(email, password, res, keepLoggedIn = false) => {
     try {
         const [rows] = await pool.query(`Select * from users where email=?`, [email])
         if(rows.length === 0){
@@ -63,7 +63,7 @@ export const loginUser=async(email, password, res, keepLoggedIn = false) => {
     }
 }
 
-export const getUserFromToken= async(token)=>{
+const getUserFromToken= async(token)=>{
     try{
         const trimmedToken = token.trim();
         const decodedToken=jwt.verify(trimmedToken, JWT_SECRET);
@@ -78,7 +78,7 @@ export const getUserFromToken= async(token)=>{
     }
 }
 
-export const logoutUser=async(res)=>{
+const logoutUser=async(res)=>{
     res.clearCookie('authToken', {
         ...baseCookieOptions,
         maxAge: 0,
@@ -86,7 +86,7 @@ export const logoutUser=async(res)=>{
     return {success:true, message: "Logout Successful"}
 }
 
-export const saveGoogleRefreshToken = async (userId, refreshToken) => {
+const saveGoogleRefreshToken = async (userId, refreshToken) => {
     const encryptedToken = encrypt(refreshToken);
     await pool.query(
         'UPDATE users SET google_refresh_token = ? WHERE id = ?',
@@ -94,7 +94,7 @@ export const saveGoogleRefreshToken = async (userId, refreshToken) => {
     )
 }
 
-export const getGoogleRefreshToken = async (userId) => {
+const getGoogleRefreshToken = async (userId) => {
     const [rows] = await pool.query(
         'SELECT google_refresh_token FROM users WHERE id = ?',
         [userId]
@@ -102,9 +102,11 @@ export const getGoogleRefreshToken = async (userId) => {
     return rows[0]?.google_refresh_token;
 }
 
-export const deleteGoogleRefreshToken = async (userId) => {
+const deleteGoogleRefreshToken = async (userId) => {
     await pool.query(
         'UPDATE users SET google_refresh_token = NULL WHERE id = ?',
         [userId]
     )
 }
+
+module.exports = {registerUser, loginUser, getUserFromToken, logoutUser, saveGoogleRefreshToken, getGoogleRefreshToken, deleteGoogleRefreshToken }

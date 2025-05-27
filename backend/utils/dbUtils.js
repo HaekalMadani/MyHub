@@ -70,4 +70,4 @@ const createAllTable=async()=>{
     }
 }
 
-export default createAllTable;
+module.exports = createAllTable

@@ -6,7 +6,7 @@ dotenv.config();
 const ENCRYPTION_KEY = Buffer.from(process.env.REFRESH_TOKEN_SECRET, 'hex'); // 32 bytes for aes-256
 const IV_LENGTH = 16; // AES block size
 
-export function encrypt(text) {
+function encrypt(text) {
     if (typeof text !== 'string' || !text.trim()) {
       console.error('encrypt() received invalid text:', text);
       throw new Error('Text to encrypt must be a non-empty string.');
@@ -20,7 +20,7 @@ export function encrypt(text) {
   }
   
 
-  export function decrypt(text) {
+function decrypt(text) {
     if (typeof text !== 'string' || !text.includes(':')) {
       console.error('decrypt() received invalid text:', text);
       throw new Error('Encrypted text is not in the expected "iv:encrypted" format.');
@@ -39,3 +39,5 @@ export function encrypt(text) {
     decrypted += decipher.final('utf8');
     return decrypted;
   }
+
+  module.exports = {decrypt, encrypt }

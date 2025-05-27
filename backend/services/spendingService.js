@@ -1,7 +1,7 @@
 const { pool } = require("../config/database.js");
 
 
-export const getGoogleRefeshToken = async (userId) => {
+const getGoogleRefeshToken = async (userId) => {
     const query = 'SELECT * FROM users WHERE id = ?'
     const value = [userId]
 
@@ -23,7 +23,7 @@ export const getGoogleRefeshToken = async (userId) => {
     }
 }
 
-export const addSpending = async(userId, spendingData) => {
+const addSpending = async(userId, spendingData) => {
     const query = 'INSERT INTO spending (user_id, amount, merchant, date) VALUES (? , ? , ? , ?)'
     const {amount, merchant, date} = spendingData
     const values = [ userId, amount, merchant, date ]
@@ -36,7 +36,7 @@ export const addSpending = async(userId, spendingData) => {
     }
 }
 
-export const deleteSpending = async(userId, spendingId) => {
+const deleteSpending = async(userId, spendingId) => {
     const query = 'DELETE FROM spending WHERE user_id = ? AND spending_id = ?'
     const values = [userId, spendingId]
 
@@ -47,3 +47,5 @@ export const deleteSpending = async(userId, spendingId) => {
         return {success: false, message: 'Spending Entry Failed to delete', error: error}
     }
 }
+
+module.exports = {deleteSpending, addSpending, getGoogleRefeshToken }

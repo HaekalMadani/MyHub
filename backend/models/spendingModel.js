@@ -1,7 +1,7 @@
 const { pool } = require('../config/database.js');
 
 
-export async function getSpendingFromDB(userId) {
+async function getSpendingFromDB(userId) {
   const [rows] = await pool.query('SELECT spending_id, date, amount, merchant FROM spending WHERE user_id = ?', [userId]);
   const spending = {};
   rows.forEach(row => {
@@ -13,3 +13,5 @@ export async function getSpendingFromDB(userId) {
   });
   return spending;
 }
+
+module.exports = getSpendingFromDB

@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-export const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     const token = req.cookies.authToken;
 
     if(!token){
@@ -34,7 +34,7 @@ export const authMiddleware = async (req, res, next) => {
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const authenticateToken = (req, res, next) => {
+const authenticateToken = (req, res, next) => {
     const token = req.cookies.authToken;
 
     if (!token) {
@@ -49,3 +49,5 @@ export const authenticateToken = (req, res, next) => {
         return res.status(403).json({ success: false, message: "Invalid or expired token" });
     }
 }
+
+module.exports = {authenticateToken, authMiddleware}

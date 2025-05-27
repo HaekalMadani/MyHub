@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken');
 dotenv.config()
 
 
-export const register = async(req, res )=>{
+const register = async(req, res )=>{
     const {username, email, password, confirmPassword} =req.body;
 
     if(!username || !email || !password){
@@ -42,7 +42,7 @@ export const register = async(req, res )=>{
     }
 }
 
-export const login=async(req, res) => {
+const login=async(req, res) => {
     const {email, password, keepLoggedIn} = req.body;
     if(!email || !password){
         return res.status(400).json({success: false, message: "All fields are required"})
@@ -61,7 +61,7 @@ export const login=async(req, res) => {
     }
 }
 
-export const logout=(req, res)=>{
+const logout=(req, res)=>{
     try {
         const response= logoutUser(res);
         return res.status(200).json({ success: true, message: response.message });
@@ -71,7 +71,7 @@ export const logout=(req, res)=>{
     }
 }
 
-export const getMe = (req, res) => {
+const getMe = (req, res) => {
     if (req.user) {
         return res.status(200).json({ success: true, data: req.user });
     }else{
@@ -81,7 +81,7 @@ export const getMe = (req, res) => {
 
 // ------ GOOGLE AUTHENTICATION ------
 
-import { google } from 'googleapis';
+const { google } = require('googleapis');
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -89,7 +89,7 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URI
 );
 
-export const redirectToGoogle = (req, res) => {
+const redirectToGoogle = (req, res) => {
   const url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
@@ -99,7 +99,7 @@ export const redirectToGoogle = (req, res) => {
   res.redirect(url);
 };
 
-export const handleGoogleCallback = async(req, res) => {
+const handleGoogleCallback = async(req, res) => {
     const {code} = req.query;
     const token = req.cookies.authToken
     
@@ -127,7 +127,7 @@ export const handleGoogleCallback = async(req, res) => {
 
 };
 
-export const unlinkGoogleAccount = async(req, res) => {
+const unlinkGoogleAccount = async(req, res) => {
     try{
         const response = await deleteGoogleRefreshToken(req.user);
         return res.status(200).json({success: true, message: "Google account unlinked successfully"});
@@ -137,3 +137,4 @@ export const unlinkGoogleAccount = async(req, res) => {
     }
 }
   
+module.exports = {register, login, logout, getMe, redirectToGoogle, handleGoogleCallback, unlinkGoogleAccount }

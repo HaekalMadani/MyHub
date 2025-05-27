@@ -18,7 +18,7 @@ function extractBody(payload) {
   return '';
 }
 
-export async function scanEmails(userId) {
+async function scanEmails(userId) {
   // 1. Get user's refresh token from DB
   const [[user]] = await pool.query('SELECT google_refresh_token FROM users WHERE id = ?', [userId]);
   if (!user || !user.google_refresh_token) {
@@ -117,3 +117,5 @@ export async function scanEmails(userId) {
     throw err;
   }
 }
+
+module.exports = {scanEmails}

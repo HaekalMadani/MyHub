@@ -12,7 +12,7 @@ const {
 } = require("../services/projectService.js");
 
 
-export const createProjectController = async (req, res) => {
+const createProjectController = async (req, res) => {
     const userId = req.user.id; 
     const projectData = req.body; // Assuming projectData is coming from the request body
 
@@ -29,7 +29,7 @@ export const createProjectController = async (req, res) => {
     }
 }
 
-export const deleteProjectController = async (req, res) => {
+const deleteProjectController = async (req, res) => {
     const userId = req.user.id;
     const projectId = req.params.id; 
 
@@ -46,7 +46,7 @@ export const deleteProjectController = async (req, res) => {
     }
 }
 
-export const getProjectsController = async (req, res) => {
+const getProjectsController = async (req, res) => {
     const userId = req.user.id; // Assuming userId is coming from the request object
 
     try {
@@ -62,7 +62,7 @@ export const getProjectsController = async (req, res) => {
     }
 }
 
-export const editProjectDescController = async (req, res) => {
+const editProjectDescController = async (req, res) => {
     const { id } = req.params;
     const { description } = req.body;
 
@@ -79,7 +79,7 @@ export const editProjectDescController = async (req, res) => {
     }
 }
 
-export const editProjectTechStackController = async (req, res) => {
+const editProjectTechStackController = async (req, res) => {
     const { id } = req.params;
     const { newStack } = req.body;
 
@@ -96,7 +96,7 @@ export const editProjectTechStackController = async (req, res) => {
     }
 }
 
-export const editRoadmapController = async (req, res) => {
+const editRoadmapController = async (req, res) => {
     const {id} = req.params;
     const { roadmap } = req.body;
 
@@ -113,7 +113,7 @@ export const editRoadmapController = async (req, res) => {
     }
 }
 
-export const createRoadmapController = async (req, res) => {
+const createRoadmapController = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
@@ -130,7 +130,7 @@ export const createRoadmapController = async (req, res) => {
     }
 }
 
-export const deleteRoadmapController = async(req, res) => {
+const deleteRoadmapController = async(req, res) => {
     const { id } = req.params;
 
 
@@ -146,7 +146,7 @@ export const deleteRoadmapController = async(req, res) => {
     }
 }
 
-export const getRoadmapController = async(req, res) => {
+const getRoadmapController = async(req, res) => {
     const { id } = req.params;
 
     try {
@@ -162,7 +162,7 @@ export const getRoadmapController = async(req, res) => {
     }
 }
 
-export const updateRoadmapController = async(req, res) => {
+const updateRoadmapController = async(req, res) => {
     const data = req.body;
     const { id } = req.params;
 
@@ -178,3 +178,5 @@ export const updateRoadmapController = async(req, res) => {
     }
 
 }
+
+module.exports = {createProjectController, deleteProjectController, getProjectsController, editProjectDescController, editProjectTechStackController, editRoadmapController, createRoadmapController, deleteRoadmapController, getRoadmapController, updateRoadmapController}

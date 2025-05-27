@@ -9,4 +9,4 @@ class projectModel {
     }
 }
 
-export default projectModel;
+module.exports = projectModel;

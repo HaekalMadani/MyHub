@@ -26,4 +26,4 @@ const checkConnection=async()=>{
     }
 }
 
-export {pool, checkConnection}
+module.exports = {pool, checkConnection}

@@ -7,4 +7,4 @@ class UserModel {
     }
 }
 
-export default UserModel;
+module.exports = UserModel
