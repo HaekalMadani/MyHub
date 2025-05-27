@@ -1,7 +1,7 @@
 
 const app = require('./app'); 
 const { checkConnection } = require('./config/database');
-const {default: createAllTable } = require('./utils/dbUtils');
+const createAllTable  = require('./utils/dbUtils');
 
 app.listen(async() => {
   console.log(`Backend server running on`);
