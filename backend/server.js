@@ -3,9 +3,8 @@ const app = require('./app');
 const { checkConnection } = require('./config/database');
 const {default: createAllTable } = require('./utils/dbUtils');
 
-const PORT = 4000;
 app.listen(PORT, async() => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
+  console.log(`Backend server running on`);
   try{
     await checkConnection();
     await createAllTable();
