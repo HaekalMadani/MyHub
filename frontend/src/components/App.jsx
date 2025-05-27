@@ -12,7 +12,7 @@ import Dashboard from "./Dashboard";
 function App() {
   
 
-  axios.defaults.baseURL = 'http://localhost:4000/api';
+  axios.defaults.baseURL = 'https://myhub-tw2f.onrender.com/api';
   axios.defaults.withCredentials = true;
 
   return (

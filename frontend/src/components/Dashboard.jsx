@@ -21,7 +21,7 @@ export default function Dashboard(){
         try {
             //const token = sessionStorage.getItem("authToken");
             const response = await axios.get(
-                'http://localhost:4000/api/auth/me',
+                'https://myhub-tw2f.onrender.com/api/auth/me',
                 {
                     withCredentials: true,
                 }

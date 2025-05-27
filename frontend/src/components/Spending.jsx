@@ -151,12 +151,12 @@ const Spending = () => {
 
 
     const handleLinkGoogle = () => {
-        window.location.href = 'http://localhost:4000/api/auth/google';
+        window.location.href = 'https://myhub-tw2f.onrender.com/api/auth/google';
     };
 
     const handleUnlinkGoogle = async () => {
         try {
-            const res = await axios.post('http://localhost:4000/api/auth/unlink-google', {}, { withCredentials: true });
+            const res = await axios.post('https://myhub-tw2f.onrender.com/api/auth/unlink-google', {}, { withCredentials: true });
             if (res.data.success) {
                 toast.success(res.data.message || "Google account unlinked.");
                 setGoogleLinked(false);

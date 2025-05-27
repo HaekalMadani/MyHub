@@ -21,7 +21,7 @@ export default function SignUp() {
     e.preventDefault();
     console.log(formValues); // Debugging line
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/register-user",formValues);
+      const response = await axios.post("https://myhub-tw2f.onrender.com/api/auth/register-user",formValues);
       console.log(response)
 
       if (response.data.success) {
