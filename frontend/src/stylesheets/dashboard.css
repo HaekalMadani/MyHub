@@ -539,6 +539,13 @@
     padding: 1rem;
   }
   
+.add-spending{
+  display: flex;
+}
+
+.add-spending:hover{
+  filter: brightness(.8);
+}
   .spend-chart {
     background-color: var(--color-primary);
     padding: 2rem;

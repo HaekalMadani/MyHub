@@ -35,4 +35,14 @@ export const addSpending = async(userId, spendingData) => {
     }
 }
 
-export const deleteSpending = async()
+export const deleteSpending = async(userId, spendingId) => {
+    const query = 'DELETE FROM spending WHERE user_id = ? AND spending_id = ?'
+    const values = [userId, spendingId]
+
+    try {
+        const [result] = await pool.query(query, values);
+        return {success: true, message: 'Spending Entry Deleted', spendingId: result.insertId}
+    } catch (error) {
+        return {success: false, message: 'Spending Entry Failed to delete', error: error}
+    }
+}

@@ -116,31 +116,25 @@ const Spending = () => {
         }
     };
 
-    const handleDeleteSpending = async (date, indexToDelete) => {
-        const entryToDelete = spending[date] ? spending[date][indexToDelete] : null;
-        if (!entryToDelete) {
-            toast.error("Entry not found for deletion.");
-            return;
-        }
-
+    const handleDeleteSpending = async (spendingId) => {
         const originalSpending = { ...spending };
 
+        console.log(spendingId)
+
         setSpending(prevSpending => {
-            const newSpending = { ...prevSpending };
-            if (newSpending[date]) {
-                newSpending[date] = newSpending[date].filter((_, idx) => idx !== indexToDelete);
-                if (newSpending[date].length === 0) {
-                    delete newSpending[date];
+            const newSpending = {};
+            for(const dateKey in prevSpending){
+              const entriesForDate = prevSpending[dateKey].filter(entry => entry.id !== spendingId);
+
+              if (entriesForDate.length > 0) {
+                    newSpending[dateKey] = entriesForDate;
                 }
             }
             return newSpending;
         });
 
         try {
-            const response = await api.delete(`/spending/delete-by-date-index`, {
-                 data: { date, index: indexToDelete } // Sending data in DELETE body
-            });
-
+            const response = await api.delete(`/spending/delete-by-date-index/${spendingId}`);
 
             if (response.data.success) {
                 toast.success(response.data.message || "Spending entry deleted.");
@@ -228,6 +222,13 @@ const Spending = () => {
 
             {Object.keys(spending).length > 0 && (
                 <>
+                    <div className="add-spending">
+                    <a onClick={toggleAddSpending} className='getStarted'>
+                        <span>Add Spending</span>
+                        <div className="arrow">
+                        </div>
+                    </a>
+                    </div>
                     <div className="spend-chart">
                         <h2>Daily Spending</h2>
                         <ResponsiveContainer width='100%' height={300}>
@@ -246,12 +247,12 @@ const Spending = () => {
                             <p className='detail-data'>
                                 ¥{(() => {
                                     const today = new Date();
-                                    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-                                    const startDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
-                                    const endDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0);
+                                    const startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                                    const endDate = new Date(today.getFullYear(), today.getMonth(), 0);
 
                                     return Object.entries(spending).reduce((acc, [dateStr, entries]) => {
                                         const date = new Date(dateStr);
+                                        date.setHours(0, 0, 0, 0);
                                         if (date >= startDate && date <= endDate) {
                                             return acc + entries.reduce((sum, e) => sum + e.amount, 0);
                                         }
@@ -273,6 +274,7 @@ const Spending = () => {
 
                                     return Object.entries(spending).reduce((acc, [dateStr, entries]) => {
                                         const date = new Date(dateStr);
+                                        date.setHours(0, 0, 0, 0);
                                         if (date >= startDate && date <= endDate) {
                                             return acc + entries.reduce((sum, e) => sum + e.amount, 0);
                                         }
@@ -284,17 +286,15 @@ const Spending = () => {
 
 
                         <div className="average-spending">
-                            <p className='detail-title'>Average Spending: </p>
-                            <p className='detail-data'>¥{(() => {
-                                const filtered = Object.entries(spending).flatMap(([dateStr, entries]) => {
-                                    const day = parseInt(dateStr.split('-')[2], 10);
-                                    if (day >= 15) return entries;
-                                    return [];
-                                });
+                          <p className='detail-title'>Average Spending: </p>
+                          <p className='detail-data'>¥{(() => {
+                            // Get all entries from all dates and flatten the array
+                            const allEntries = Object.values(spending).flat();
 
-                                const total = filtered.reduce((acc, entry) => acc + entry.amount, 0);
-                                return filtered.length > 0 ? Math.round(total / filtered.length) : 0;
-                            })()}</p>
+                            const total = allEntries.reduce((acc, entry) => acc + entry.amount, 0);
+
+                            return allEntries.length > 0 ? Math.round(total / allEntries.length) : 0;
+                          })()}</p>
                         </div>
                     </div>
 
@@ -326,10 +326,10 @@ const Spending = () => {
                                         <li key={date}>
                                             <strong>{date}</strong>
                                             <ul>
-                                                {entries.map((entry, idx) => (
-                                                    <li key={`${date}-${idx}`}>
+                                                {entries.map((entry) => (
+                                                    <li key={entry.id}>
                                                         ¥{entry.amount} - {entry.merchant}
-                                                        <button onClick={() => handleDeleteSpending(date, idx)}>Delete</button>
+                                                        <button onClick={() => handleDeleteSpending(entry.id)}>Delete</button>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -342,7 +342,12 @@ const Spending = () => {
 
                     {googleLinked === true && (
                         <div className="unlink-google">
-                            <button onClick={handleUnlinkGoogle} className="link-google-btn">Unlink Google Account</button>
+                            <a onClick={handleUnlinkGoogle} className="link-google-btn">
+                        <div className="google-icon-cont">
+                            <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/512px-Google_%22G%22_logo.svg.png" alt="Google icon" />
+                        </div>
+                        <span>Unlink Google</span>
+                    </a>
                         </div>
                     )}
                 </>
