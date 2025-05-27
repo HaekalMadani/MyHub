@@ -1,8 +1,9 @@
 const { google } = require('googleapis');
-import { pool } from '../config/database.js';
-import { decrypt } from '../utils/encryptionUtils.js';
-import { toHalfWidth } from '../utils/extraUtils.js';
-import { AuthError } from '../error/authError.js'; 
+const { pool } = require('../config/database.js');
+const { decrypt } = require('../utils/encryptionUtils.js');
+const { toHalfWidth } = require('../utils/extraUtils.js');
+const { AuthError } = require('../error/authError.js');
+
 
 function extractBody(payload) {
   if (payload.parts) {

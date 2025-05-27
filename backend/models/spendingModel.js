@@ -1,4 +1,5 @@
-import { pool } from '../config/database.js';
+const { pool } = require('../config/database.js');
+
 
 export async function getSpendingFromDB(userId) {
   const [rows] = await pool.query('SELECT spending_id, date, amount, merchant FROM spending WHERE user_id = ?', [userId]);

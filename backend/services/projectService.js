@@ -1,4 +1,5 @@
-import { pool } from "../config/database.js"
+const { pool } = require("../config/database.js");
+
 
 export const createProject = async(userId, projectData) => {
     const { projectName, projectDescription, projectTag, projectStatus, projectLinks} = projectData;

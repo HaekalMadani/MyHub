@@ -1,4 +1,5 @@
-import { pool } from "../config/database.js"
+const { pool } = require("../config/database.js");
+
 
 export const getGoogleRefeshToken = async (userId) => {
     const query = 'SELECT * FROM users WHERE id = ?'

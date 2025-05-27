@@ -1,8 +1,16 @@
-import UserModel from "../models/userModel.js";
-import { registerUser, loginUser, getUserFromToken, logoutUser, saveGoogleRefreshToken, deleteGoogleRefreshToken } from "../services/authService.js";
-import { authenticateToken } from '../middleware/authMiddleware.js';
-import dotenv from 'dotenv'
-import jwt from 'jsonwebtoken';
+const UserModel = require("../models/userModel.js");
+const {
+  registerUser,
+  loginUser,
+  getUserFromToken,
+  logoutUser,
+  saveGoogleRefreshToken,
+  deleteGoogleRefreshToken,
+} = require("../services/authService.js");
+const { authenticateToken } = require('../middleware/authMiddleware.js');
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
 dotenv.config()
 
 

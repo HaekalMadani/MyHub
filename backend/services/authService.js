@@ -1,7 +1,8 @@
-import bcrypt from 'bcrypt';
-import { pool } from '../config/database.js';
-import jwt from 'jsonwebtoken'
-import { encrypt } from '../utils/encryptionUtils.js'; // Your encryption helper
+const bcrypt = require('bcrypt');
+const { pool } = require('../config/database.js');
+const jwt = require('jsonwebtoken');
+const { encrypt } = require('../utils/encryptionUtils.js'); // Your encryption helper
+
 const JWT_SECRET = "ETRHSDFW43EQT7HDFA";
 
 export const baseCookieOptions = {

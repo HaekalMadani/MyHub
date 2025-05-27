@@ -1,5 +1,6 @@
-import crypto from 'crypto';
-import dotenv from 'dotenv';
+const crypto = require('crypto');
+const dotenv = require('dotenv');
+
 dotenv.config();
 
 const ENCRYPTION_KEY = Buffer.from(process.env.REFRESH_TOKEN_SECRET, 'hex'); // 32 bytes for aes-256

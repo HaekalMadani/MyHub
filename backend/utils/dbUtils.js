@@ -1,4 +1,5 @@
-import { pool } from "../config/database.js"
+const { pool } = require("../config/database.js");
+
 
 const userTableQuery=  `CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY, 

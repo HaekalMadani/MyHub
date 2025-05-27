@@ -1,5 +1,5 @@
-import mysql2 from 'mysql2/promise'
-import dotenv from 'dotenv'
+const mysql2 = require('mysql2/promise');
+const dotenv = require('dotenv');
 
 dotenv.config();
 

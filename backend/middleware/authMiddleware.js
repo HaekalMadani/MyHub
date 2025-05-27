@@ -1,6 +1,6 @@
-import { getUserFromToken } from '../services/authService.js';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv'
+const { getUserFromToken } = require('../services/authService.js');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
 dotenv.config();
 

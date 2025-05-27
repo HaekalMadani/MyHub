@@ -1,4 +1,16 @@
-import { createProject, deleteProject, getProjects, editProjectDesc, editProjectTechStack, editRoadmap, createRoadmap, deleteRoadmap, getRoadmap, updateRoadmap } from "../services/projectService.js";
+const {
+  createProject,
+  deleteProject,
+  getProjects,
+  editProjectDesc,
+  editProjectTechStack,
+  editRoadmap,
+  createRoadmap,
+  deleteRoadmap,
+  getRoadmap,
+  updateRoadmap
+} = require("../services/projectService.js");
+
 
 export const createProjectController = async (req, res) => {
     const userId = req.user.id; 
