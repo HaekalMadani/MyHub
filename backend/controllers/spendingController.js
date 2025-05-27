@@ -1,7 +1,7 @@
 const { scanEmails } = require('../models/gmailModel');
 const { getUserFromToken } = require('../services/authService.js');
 const { getSpendingFromDB} = require('../models/spendingModel.js')
-const { getGoogleRefeshToken } = require('../services/spendingService.js')
+const { getGoogleRefeshToken, addSpending } = require('../services/spendingService.js')
 
 async function handleScanEmails(req, res) {
   const { token } = req.body;
@@ -54,4 +54,19 @@ async function checkGoogleRefreshToken(req, res) {
   }
 }
 
-module.exports = { handleScanEmails, getSpendingData, checkGoogleRefreshToken };
+async function addSpendingController(req,res) {
+  const userId = req.user.id;
+  const data = req.body;
+
+  try{
+    const response = await addSpending(userId, data)
+    if(response.success){
+      return res.status(200).json(response);
+    }else
+      return res.status(400).json(response);
+  }catch(err){
+    return res.status(500).json({ success: false, message: "An internal server error occurred while creating spending entry" });
+  }
+}
+
+module.exports = { handleScanEmails, getSpendingData, checkGoogleRefreshToken, addSpendingController };

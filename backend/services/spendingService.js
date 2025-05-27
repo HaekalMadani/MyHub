@@ -21,3 +21,18 @@ export const getGoogleRefeshToken = async (userId) => {
         console.log ("Something wrong in checking google refesh token existence: ", error)
     }
 }
+
+export const addSpending = async(userId, spendingData) => {
+    const query = 'INSERT INTO spending (user_id, amount, merchant, date) VALUES (? , ? , ? , ?)'
+    const {amount, merchant, date} = spendingData
+    const values = [ userId, amount, merchant, date ]
+
+    try {
+        const [result] = await pool.query(query, values);
+        return {success: true, message: 'Spending Entry Added', spendingId: result.insertId}
+    } catch (error) {
+        return {success: false, message: 'Spending Entry Failed to add', error: error}
+    }
+}
+
+export const deleteSpending = async()
