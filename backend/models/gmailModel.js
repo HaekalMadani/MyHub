@@ -1,4 +1,4 @@
-import { google } from 'googleapis';
+const { google } = require('googleapis');
 import { pool } from '../config/database.js';
 import { decrypt } from '../utils/encryptionUtils.js';
 import { toHalfWidth } from '../utils/extraUtils.js';
