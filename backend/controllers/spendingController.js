@@ -1,6 +1,6 @@
 const { scanEmails } = require('../models/gmailModel');
 const { getUserFromToken } = require('../services/authService.js');
-const { getSpendingFromDB} = require('../models/spendingModel.js')
+const  getSpendingFromDB  = require('../models/spendingModel.js')
 const { getGoogleRefeshToken, addSpending, deleteSpending } = require('../services/spendingService.js')
 
 async function handleScanEmails(req, res) {

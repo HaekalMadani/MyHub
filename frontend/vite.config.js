@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
   proxy: {
     '/api': {
-      target: 'feisty-dedication-production.up.railway.app',
+      target: 'https://feisty-dedication-production.up.railway.app',
       changeOrigin: true,
       secure: false,
     },

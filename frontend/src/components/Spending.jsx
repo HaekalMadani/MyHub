@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import api from '../api';
 import { FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -22,7 +21,7 @@ const Spending = () => {
     const fetchSpendingData = useCallback(async () => {
         setLoadingSpending(true);
         try {
-            const response = await api.get('/spending', { withCredentials: true });
+            const response = await axios.get('/spending', { withCredentials: true });
             console.log('Spending data fetched:', response.data);
             if (response.data.success === false) {
                 setSpending({});
@@ -41,7 +40,7 @@ const Spending = () => {
     const checkGoogleLinkStatus = useCallback(async () => {
         setGoogleLinkCheckLoading(true);
         try {
-            const res = await api.get('/spending/check', { withCredentials: true });
+            const res = await axios.get('/spending/check', { withCredentials: true });
             if (res.data.success) {
                 setGoogleLinked(true);
             } else {
@@ -86,7 +85,7 @@ const Spending = () => {
         }
 
         try {
-            const response = await api.post('/spending',
+            const response = await axios.post('/spending',
                 {
                     amount: parseFloat(spendingAmount),
                     merchant: spendingMerchant,
@@ -134,7 +133,7 @@ const Spending = () => {
         });
 
         try {
-            const response = await api.delete(`/spending/delete-by-date-index/${spendingId}`);
+            const response = await axios.delete(`/spending/delete-by-date-index/${spendingId}`);
 
             if (response.data.success) {
                 toast.success(response.data.message || "Spending entry deleted.");
@@ -151,12 +150,12 @@ const Spending = () => {
 
 
     const handleLinkGoogle = () => {
-        window.location.href = 'https://myhub-tw2f.onrender.com/api/auth/google';
+        window.location.href = 'https://feisty-dedication-production.up.railway.app/api/auth/google';
     };
 
     const handleUnlinkGoogle = async () => {
         try {
-            const res = await axios.post('https://myhub-tw2f.onrender.com/api/auth/unlink-google', {}, { withCredentials: true });
+            const res = await axios.post('/auth/unlink-google', {}, { withCredentials: true });
             if (res.data.success) {
                 toast.success(res.data.message || "Google account unlinked.");
                 setGoogleLinked(false);

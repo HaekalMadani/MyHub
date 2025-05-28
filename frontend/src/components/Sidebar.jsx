@@ -23,7 +23,7 @@ const Sidebar = ({userData}) => {
 
   const hanldleLogout = async () => {
     try {
-      await axios.post("https://myhub-tw2f.onrender.com/api/auth/logout", {}, { withCredentials: true });
+      await axios.post("/auth/logout", {}, { withCredentials: true });
               navigate("/login");
     } catch (error) {
       console.error("Error during logout:", error.response?.data || error.message);

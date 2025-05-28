@@ -72,7 +72,7 @@ const Project = () => {
     useEffect(() => {
         setIsLoading(true);
 
-        api.get('/projects')
+        axios.get('/projects')
             .then(res => {
                 if (res.data && res.data.success && Array.isArray(res.data.data)) {
                     setProject(res.data.data);
@@ -94,7 +94,7 @@ const Project = () => {
 
     useEffect(() => {
         if(selectedProject){
-            axios.get(`https://myhub-tw2f.onrender.com/api/projects/${selectedProject.project_id}/roadmap`)
+            axios.get(`/projects/${selectedProject.project_id}/roadmap`)
             .then(res => {
                 if(res.data && res.data.success && Array.isArray(res.data.data)){
                     setRoadmapItems(res.data.data);
@@ -120,7 +120,7 @@ const Project = () => {
         e.preventDefault();
 
         try{
-            const response = await axios.post('https://myhub-tw2f.onrender.com/api/projects',
+            const response = await axios.post('/projects',
             {
                 projectName: projectName,
                 projectDescription: projectDescription,
@@ -155,7 +155,7 @@ const Project = () => {
     const handleDeleteProject = async (e) => {
         e.preventDefault();
         try{
-            const response = await axios.delete('https://myhub-tw2f.onrender.com/api/projects/delete/' + deleteProjectId, {withCredentials: true} )
+            const response = await axios.delete('/projects/delete/' + deleteProjectId, {withCredentials: true} )
 
             if(response.data && response.data.success){
                 toast.success(response.data.message || "Removed Project")
@@ -372,7 +372,7 @@ const Project = () => {
                                         onClick={async() => {
                                             try {
                                                 setRoadmapItems(prevItems => prevItems.filter(item => item.road_id !== roadItem.road_id));
-                                                await axios.delete(`https://myhub-tw2f.onrender.com/api/projects/${roadItem.road_id}/roadmap`);
+                                                await axios.delete(`/projects/${roadItem.road_id}/roadmap`);
                                                 setSaveChange(true);  
                                             } catch (err) {
                                                 console.error('Error removing roadmap item:', err);
