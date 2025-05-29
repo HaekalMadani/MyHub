@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import { useRef } from 'react';
+import  api  from '../api.js';
 import { FaRegEdit } from "react-icons/fa";
 import { useMemo } from 'react';
-import { useNavigate } from "react-router-dom";
 
 
 const Project = () => {
@@ -32,8 +32,6 @@ const Project = () => {
     const dialogRef = useRef(null);
     const deleteDialogRef = useRef(null);
     const detailDialogRef = useRef(null);
-
-    const navigate = useNavigate();
 
     const toggleAddProject = () => {
     if (dialogRef.current) {
@@ -143,7 +141,7 @@ const Project = () => {
 
       
                 dialogRef.current?.close();
-                navigate("/dashboard", { replace: true });
+                location.reload()
 
             }else{
                 toast.error(response.data.message || "Failed to add project");
@@ -162,7 +160,7 @@ const Project = () => {
             if(response.data && response.data.success){
                 toast.success(response.data.message || "Removed Project")
 
-                navigate("/dashboard", { replace: true });
+                location.reload()
             }
         }catch(error){
             console.log('Failed to delete project', error)
@@ -449,7 +447,7 @@ const Project = () => {
                 </div>
                 <div className="button-cont">
                     {saveChange ? (
-                        <button type="button" className='close-project' onClick={() => navigate("/dashboard", { replace: true })}>Save Changes</button>
+                        <button type="button" className='close-project' onClick={() => location.reload()}>Save Changes</button>
                     ) : (
                         <button type="button" className='close-project' onClick={() => detailDialogRef.current.close()}>Close</button>
                     )}
