@@ -4,7 +4,7 @@ MyHub is a full-stack web application dashboard designed for everyday productivi
 
 
 ## Deployment:
-Live Link: Coming Soon
+[Live Link](https://myhub-2025.netlify.app/)
 
 ## Features:
 - Project display: Showcase and manage your ongoing personal.
