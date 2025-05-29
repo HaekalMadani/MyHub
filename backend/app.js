@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json()); // THIS MUST COME FIRST
 app.use(cookieParser());
-app.use(cors({ origin: 'myhub-2025.netlify.app', credentials: true }));
+app.use(cors({ origin: 'https://myhub-2025.netlify.app', credentials: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api', spendingRoutes);
