@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import { useRef } from 'react';
-import  api  from '../api.js';
 import { FaRegEdit } from "react-icons/fa";
 import { useMemo } from 'react';
 
@@ -197,7 +196,7 @@ const Project = () => {
                                     type='button'
                                     onClick={async ()=> {
                                         try{
-                                            api.put(`/projects/${selectedProject.project_id}/description`, {
+                                            axios.put(`/projects/${selectedProject.project_id}/description`, {
                                             description: editedDescription,
                                             });
 
@@ -242,7 +241,7 @@ const Project = () => {
                                     onClick = {async () => {
                                         const updatedStack = selectedProject.tech_stack.filter((_, i) => i !== index);
                                         try{
-                                            await api.put(`/projects/${selectedProject.project_id}/techstack`, {
+                                            await axios.put(`/projects/${selectedProject.project_id}/techstack`, {
                                                 newStack: updatedStack,
                                             });
 
@@ -280,7 +279,7 @@ const Project = () => {
                                 onClick={async() => {
                                     const updatedStack = [...(selectedProject.tech_stack || []), newTech]
                                     try{
-                                        const res = await api.put(`/projects/${selectedProject.project_id}/techstack`, {newStack: updatedStack}
+                                        const res = await axios.put(`/projects/${selectedProject.project_id}/techstack`, {newStack: updatedStack}
                                         );
 
                                         if(res.data.success){
@@ -344,7 +343,7 @@ const Project = () => {
                                             );
 
                                             try {
-                                                await api.put(`/projects/${selectedProject.project_id}/roadmap`,{
+                                                await axios.put(`/projects/${selectedProject.project_id}/roadmap`,{
                                                     road_id: roadItem.road_id,
                                                     is_checked: newCheckedStatus
                                                 });
@@ -409,7 +408,7 @@ const Project = () => {
                                     }
                                     
                                     try {
-                                        const response = await api.post(`/projects/${selectedProject.project_id}/roadmap`, {
+                                        const response = await axios.post(`/projects/${selectedProject.project_id}/roadmap`, {
                                             name: newRoadmapName.trim(),
                                             is_checked: "0",
                                         })
