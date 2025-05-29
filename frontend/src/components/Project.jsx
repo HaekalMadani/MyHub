@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useRef } from 'react';
 import { FaRegEdit } from "react-icons/fa";
 import { useMemo } from 'react';
+import { useNavigate } from "react-router-dom";
 
 
 const Project = () => {
@@ -31,6 +32,8 @@ const Project = () => {
     const dialogRef = useRef(null);
     const deleteDialogRef = useRef(null);
     const detailDialogRef = useRef(null);
+
+    const navigate = useNavigate();
 
     const toggleAddProject = () => {
     if (dialogRef.current) {
@@ -159,7 +162,7 @@ const Project = () => {
             if(response.data && response.data.success){
                 toast.success(response.data.message || "Removed Project")
 
-                lnavigate("/dashboard", { replace: true });
+                navigate("/dashboard", { replace: true });
             }
         }catch(error){
             console.log('Failed to delete project', error)
