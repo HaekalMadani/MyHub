@@ -140,7 +140,7 @@ const Project = () => {
 
       
                 dialogRef.current?.close();
-                location.reload()
+                navigate("/dashboard", { replace: true });
 
             }else{
                 toast.error(response.data.message || "Failed to add project");
@@ -159,7 +159,7 @@ const Project = () => {
             if(response.data && response.data.success){
                 toast.success(response.data.message || "Removed Project")
 
-                location.reload()
+                lnavigate("/dashboard", { replace: true });
             }
         }catch(error){
             console.log('Failed to delete project', error)
@@ -446,7 +446,7 @@ const Project = () => {
                 </div>
                 <div className="button-cont">
                     {saveChange ? (
-                        <button type="button" className='close-project' onClick={() => location.reload()}>Save Changes</button>
+                        <button type="button" className='close-project' onClick={() => navigate("/dashboard", { replace: true })}>Save Changes</button>
                     ) : (
                         <button type="button" className='close-project' onClick={() => detailDialogRef.current.close()}>Close</button>
                     )}
