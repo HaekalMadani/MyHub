@@ -34,6 +34,11 @@ html, body{
     height: 100%;
     background-color: var(--color-primary-dark);
     font-family: 'Space Grotesk', sans-serif;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 dialog{
@@ -43,71 +48,107 @@ dialog{
 .container{
     display: grid;
     grid-template-columns: .95fr 6fr;
-    grid-template-rows: 0.3fr repeat(5, 1fr);
-    
+    grid-template-rows: 0.3fr auto; /* Adjusted for more flexible content */
+    grid-template-areas:
+        "sidebar header"
+        "sidebar main"
+        "sidebar main"
+        "sidebar main"
+        "sidebar main"
+        "sidebar main";
     font-weight: bold;
     min-height: 100vh;
     font-family: 'Space Grotesk', sans-serif;
     background: var(--color-primary-dark);
 }
 
-.spinner {
-    border: 2px solid #f3f3f3; 
-    border-top: 2px solid #555; 
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    animation: spin 1s linear infinite;
-    display: inline-block;
-    margin-right: 8px; 
-    vertical-align: middle;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  .fail-container {
+.fail-container {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: var(--color-primary);
-  }
+    padding: 15px;
+}
   
-  .fail-message-box {
+.fail-message-box {
     text-align: center;
     background-color: var(--color-primary-light);
-    padding: 40px;
+    padding: 30px; /* Adjusted padding */
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
+    width: 100%;
+    max-width: 500px; /* Max width for larger mobile screens */
+}
   
-  .fail-message {
-    font-size: 24px;
+.fail-message {
+    font-size: 20px; /* Adjusted font size */
     color: var(--color-secondary);
     filter: brightness(1.2);
     margin-bottom: 20px;
-  }
+}
   
-  .fail-button {
-    font-size: 18px;
-    padding: 10px 20px;
+.fail-button {
+    font-size: 16px; /* Adjusted font size */
+    padding: 12px 24px; /* Adjusted padding */
     background-color: var(--color-tertiary);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
+}
   
-  .fail-button:hover {
+.fail-button:hover {
     filter: brightness(1.1);
-  }
+}
   
-  .icon {
+.icon {
     width: 20px; 
     height: 20px;
     fill: var(--color-tertiary); 
     transition: fill 0.3s ease;
+}
+
+/* Mobile specific styles */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* Sidebar and main content will stack */
+        grid-template-rows: auto auto 1fr; /* Adjust rows for header, optional sidebar, and main content */
+        grid-template-areas: /* Adjust if you have a mobile-specific sidebar toggle */
+            "header"
+            "main"
+            "main";
+    }
+
+    .fail-message {
+        font-size: 18px;
+    }
+
+    .fail-button {
+        font-size: 16px;
+        padding: 10px 18px;
+    }
+
+    .icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    html, body {
+        font-size: 14px; /* Adjust base font size for better readability on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .fail-message-box {
+        padding: 20px;
+    }
+    .fail-message {
+        font-size: 16px;
+    }
+
+    .fail-button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
 }

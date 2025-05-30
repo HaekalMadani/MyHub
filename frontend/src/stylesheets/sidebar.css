@@ -10,28 +10,32 @@ a {
 .sidebar {
   color: var(--color-secondary);
   background-color: var(--color-primary);
-  grid-row: 1 / 8;
-  padding: 10px 4.5% 10px 10px; 
+  grid-area: sidebar; /* Assuming .container is set up with grid-template-areas */
+  /* grid-row: 1 / 8; Remove if using grid-area and container handles row span */
+  padding: 15px 10px;
   display: flex;
   flex-direction: column;
   font-size: 1.1rem;
   position: sticky;
   top: 0;
   height: 100vh;
-  width: 100%;
+  /* width: 100%; This will be dictated by the grid column width */
   border-right: var(--color-border) 1px solid;
-
   overflow-y: auto;
   overscroll-behavior: contain;
+  z-index: 200; /* For context stacking, might be adjusted for mobile overlay */
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out; /* Added transition for mobile */
 }
 
 .sidebar .logo {
   display: flex;
-  align-items: center;  
-  text-align: center;
+  align-items: center;
+  text-align: left; /* Adjusted for typical logo alignment */
   font-size: 1.3rem;
-  width: 70%;
-  margin-left: 1rem;
+  /* width: 70%; Consider removing or adjusting, let padding control spacing */
+  margin-left: 0.5rem; /* Adjusted margin */
+  margin-bottom: 1.5rem; /* Added margin bottom */
+  padding-top: 0.5rem;
 }
 
 .sidebar ul {
@@ -39,9 +43,9 @@ a {
   padding: 0;
   display: flex;
   flex-direction: column;
-  padding-inline-start: 10px;
+  padding-inline-start: 0; /* Removed specific padding for better control */
   gap: .5rem;
-  margin-top: 2rem;
+  margin-top: 1rem; /* Adjusted margin */
 }
 
 .list-item {
@@ -51,27 +55,26 @@ a {
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
   width: 100%;
-  font-weight: 100;
+  font-weight: 300; /* Adjusted for consistency, active state will override */
 }
 
 .list-item-link {
   display: flex;
   align-items: center;
   color: inherit;
-  padding: 0.5rem;
+  padding: 0.6rem 0.8rem; /* Adjusted padding */
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .list-item-link .title {
-  margin-left: 0.3rem;
+  margin-left: 0.5rem; /* Adjusted margin */
 }
 
 .list-item-link:hover {
   background-color: var(--color-primary-light);
-
-
 }
 
 .list-item-link:focus {
@@ -80,81 +83,204 @@ a {
 }
 
 .list-item.active .list-item-link {
-    width: 100%;
-    padding: 1rem 1rem 1rem 0.5rem; 
-    background-color: var(--color-primary-light);
-    color: var(--color-secondary);
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-weight: 450;
-  }
-  
+  padding: 0.8rem 0.8rem 0.8rem 0.8rem; /* Unified padding */
+  background-color: var(--color-primary-light);
+  color: var(--color-secondary); /* Ensure high contrast if needed */
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-weight: 500; /* Adjusted font weight */
+}
+
 .sidebar .icon {
   display: flex;
   align-items: center;
+  flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
-.user-side{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: var(--color-tertiary);
-    padding: 5px 10px;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
-    width: 80%;
-    align-self: center;
-    cursor: pointer;
+.user-side {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-tertiary);
+  padding: 8px 12px; /* Adjusted padding */
+  border-radius: 8px;
+  margin-bottom: 1rem; /* Adjusted margin */
+  width: auto; /* Allow content to define width up to max */
+  max-width: 90%; /* Ensure it doesn't overflow sidebar padding */
+  align-self: center;
+  cursor: pointer;
+  color: var(--color-primary-dark, #333); /* Added text color for contrast */
 }
 
 .user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-.line{
-  margin-top: auto;
-  border-top: var(--color-border) 1px solid;
-  color: var(--color-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
-.user-stuff{
+.user-side .username { /* Assuming there's a span or div for username */
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.line {
+  margin-top: auto; /* Pushes user-stuff to the bottom */
+  padding-top: 0.5rem; /* Space above the line */
+  border-top: var(--color-border) 1px solid;
+  color: var(--color-primary); /* This likely won't show, border-top does */
+}
+
+.user-stuff {
   display: flex;
-  gap: 1rem;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 0.5rem; /* Space between buttons */
+  padding: 0.8rem 0; /* Padding around the user actions area */
 }
 
 .user-stuff button {
   background: var(--color-tertiary);
-  width: max-content;
-  height: min-content;
-  padding: 10px 10px;
+  width: 100%; /* Make buttons full width of their container */
+  height: auto; /* Auto height based on content */
+  padding: 10px 12px; /* Adjusted padding */
   color: var(--color-primary);
-  font-size: 1rem;
+  font-size: 0.95rem; /* Adjusted font size */
   font-weight: bold;
   font-family: inherit;
   display: flex;
   align-items: center;
+  justify-content: flex-start; /* Align content to the start */
   border: none;
-  border-radius: 10px;
+  border-radius: 6px; /* Adjusted border radius */
   cursor: pointer;
   overflow: hidden;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.user-stuff button:hover {
+  filter: brightness(0.9);
+}
 
 .user-stuff svg {
   fill: var(--color-primary);
   flex-shrink: 0;
+  margin-right: 8px; /* Added margin for spacing icon and text */
 }
 
+/* Hide text by default for icon-only view initially, will be shown via JS/class or if space allows */
 .user-stuff span {
   white-space: nowrap;
   overflow: hidden;
   display: inline-block;
+  opacity: 1; /* Show by default */
+  max-width: 100px; /* Example max-width, adjust as needed */
+  margin-left: 0; /* Remove fixed margin if text is always visible */
+  transition: max-width 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Styles for when sidebar might be in a collapsed state (example, controlled by JS) */
+.sidebar.collapsed .user-stuff span {
   max-width: 0;
   opacity: 0;
   margin-left: 0;
-  transition: max-width 0.5s ease-out, opacity 0.5s ease-out, margin-left 0.5s;
+}
+.sidebar.collapsed .list-item-link .title {
+  display: none; /* Hide titles when collapsed */
+}
+.sidebar.collapsed .logo .logo-text { /* Assuming logo has text part */
+    display: none;
+}
+.sidebar.collapsed {
+    /* Define collapsed width for desktop if you implement such a feature */
+    /* width: 80px; */
+}
+
+
+/* Mobile specific styles */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px; /* Fixed width for off-canvas menu */
+    height: 100%; /* Full height */
+    transform: translateX(-100%); /* Hidden by default */
+    border-right: 1px solid var(--color-border); /* Ensure border is visible */
+    /* grid-row: auto; Remove grid specific property */
+    padding: 20px 15px;
+    font-size: 1rem;
+    z-index: 1000; /* Ensure it's above other content */
+  }
+
+  .sidebar.is-open { /* Class to be toggled by JavaScript */
+    transform: translateX(0);
+  }
+
+  .sidebar .logo {
+    font-size: 1.2rem;
+    margin-left: 0; /* Adjust for mobile */
+    justify-content: center; /* Center logo if desired */
+    width: auto;
+  }
+
+  .list-item-link {
+    padding: 0.7rem;
+  }
+  .list-item.active .list-item-link {
+      padding: 0.7rem;
+      font-weight: bold;
+  }
+
+  .user-side {
+    padding: 6px 10px;
+    max-width: 100%; /* Allow it to fill available space */
+    font-size: 0.9rem;
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .user-stuff {
+    padding: 0.5rem 0;
+  }
+
+  .user-stuff button {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+    justify-content: flex-start; /* Ensure text is visible */
+  }
+
+  .user-stuff button svg {
+    margin-right: 10px;
+  }
+
+  .user-stuff span {
+    opacity: 1; /* Ensure text is visible on mobile */
+    max-width: none; /* Allow text to take space */
+  }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 250px; /* Slightly smaller for very small screens */
+        padding: 15px 10px;
+    }
+    .sidebar .logo {
+        font-size: 1.1rem;
+    }
+    .list-item-link, .list-item.active .list-item-link {
+        padding: 0.6rem;
+        font-size: 0.95rem;
+    }
+    .user-side {
+        font-size: 0.85rem;
+    }
+    .user-stuff button {
+        font-size: 0.85rem;
+    }
 }
