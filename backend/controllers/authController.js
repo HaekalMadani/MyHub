@@ -119,7 +119,7 @@ const handleGoogleCallback = async(req, res) => {
         if(tokens.refresh_token){
             await saveGoogleRefreshToken(userId, tokens.refresh_token);
         }
-        res.redirect("http://localhost:5173/dashboard");
+        res.redirect("https://myhub-2025.netlify.app/dashboard");
     }catch(error){
         console.error("Error during Google authentication callback:", error);
         return res.status(500).json({success: false, message: "Internal server error during Google authentication"});
