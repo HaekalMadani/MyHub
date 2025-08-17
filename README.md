@@ -9,10 +9,10 @@ MyHub is a full-stack web application dashboard designed for everyday productivi
 ## Features:
 - Project display: Showcase and manage your ongoing personal.
 - Spending Tab: Automatically tracks your monthly expenses using Gmail integration.
-
-## To be Implemented
 - Enhance project management (tags, filter, media uploads)
 - Manual expense tracking support and Customizable Gmail fetch filters
+
+## To be Implemented
 - To-Do list and task manager
 - Customizable user profiles (avatars, bios, themes)
 
